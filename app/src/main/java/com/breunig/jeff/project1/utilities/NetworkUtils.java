@@ -28,7 +28,7 @@ public final class NetworkUtils {
     private static final String format = "json";
 
     final static String API_KEY_PARAM = "api_key";
-    final static String API_KEY = "3037ded6b1bfd00afee7eb91f13fdf0c";
+    final static String API_KEY = ""; //TODO: Add API Key https://www.themoviedb.org
     final static String SORT_TYPE_POPULAR = "popular";
     final static String SORT_TYPE_TOP_RATED = "top_rated";
 
