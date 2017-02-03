@@ -21,6 +21,7 @@ public class Movie implements Serializable {
         this.overview = jsonObject.getString("overview");
         this.releaseDate = jsonObject.getString("release_date");
         this.userRating = jsonObject.getString("vote_average");
+        this.posterPath = jsonObject.getString("poster_path");
     }
 
 }

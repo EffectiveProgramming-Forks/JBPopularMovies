@@ -5,9 +5,11 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Scanner;
 import com.breunig.jeff.project1.models.MovieSortType;
 
@@ -20,6 +22,7 @@ public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
+    private static final String MOVIE_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
 
     private static final String format = "json";
 
@@ -53,6 +56,21 @@ public final class NetworkUtils {
         Log.v(TAG, "Built URI " + url);
 
         return url;
+    }
+
+    public static String buildMoviePosterUrlString(String posterPath) {
+        Uri builtUri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
+                .appendPath("w780/")
+                .appendPath(posterPath)
+                .build();
+
+        String urlString = null;
+        try {
+            urlString = URLDecoder.decode(builtUri.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.d(TAG, "Movie poster url string exception " + e.getLocalizedMessage());
+        }
+        return urlString;
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

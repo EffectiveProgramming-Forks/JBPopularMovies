@@ -2,13 +2,17 @@ package com.breunig.jeff.project1.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.models.Movie;
+import com.breunig.jeff.project1.utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
+    private ImageView mPosterImageView;
     private TextView mTitleTextView;
     private TextView mOverviewTextView;
     private TextView mReleaseDateTextView;
@@ -20,6 +24,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         mMovie = (Movie) getIntent().getSerializableExtra("MOVIE");
+
+        mPosterImageView = (ImageView) findViewById(R.id.iv_poster);
+        Picasso.with(this).load(NetworkUtils.buildMoviePosterUrlString(mMovie.posterPath)).into(mPosterImageView);
 
         mTitleTextView = (TextView) findViewById(R.id.tv_title);
         mTitleTextView.setText(mMovie.title);
