@@ -32,7 +32,7 @@ import java.net.URL;
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
     public static final int numberOfColumns = 2;
     private int mColumnWidth;
-    private MovieSortType movieSortType = MovieSortType.POPULAR;
+    private MovieSortType mMovieSortType;
     private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
     private TextView mErrorMessageDisplay;
@@ -67,12 +67,18 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
+        updateMovieSortType(MovieSortType.POPULAR);
+    }
+
+    private void updateMovieSortType(MovieSortType movieSortType) {
+        mMovieSortType = movieSortType;
+        updateTitle();
+        mMovieListAdapter.setMovies(null);
         loadMovieData();
     }
 
     private void loadMovieData() {
-        showMovieDataView();
-
+        showMoviesView();
         new com.breunig.jeff.project1.activities.MovieListActivity.FetchMovieTask().execute();
     }
 
@@ -86,9 +92,9 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         startActivity(intentToStartDetailActivity);
     }
 
-    private void showMovieDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+    private void showMoviesView() {
         mRecyclerView.setVisibility(View.VISIBLE);
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
     }
 
     private void showErrorMessage() {
@@ -99,9 +105,15 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected Movie[] doInBackground(String... params) {
 
-            URL movieRequestUrl = NetworkUtils.buildMovieListUrl(movieSortType);
+            URL movieRequestUrl = NetworkUtils.buildMovieListUrl(mMovieSortType);
 
             try {
                 String jsonMovieResponse = NetworkUtils
@@ -117,7 +129,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         protected void onPostExecute(Movie[] movies) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movies != null) {
-                showMovieDataView();
+                showMoviesView();
                 mMovieListAdapter.setMovies(movies);
             } else {
                 showErrorMessage();
@@ -136,13 +148,18 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sort) {
-            mMovieListAdapter.setMovies(null);
-
-            loadMovieData();
+        if (id == R.id.action_popular) {
+            updateMovieSortType(MovieSortType.POPULAR);
+            return true;
+        } else if (id == R.id.action_top_rated) {
+            updateMovieSortType(MovieSortType.TOP_RATED);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateTitle() {
+        String sortTypeTitle = mMovieSortType == MovieSortType.POPULAR ? getString(R.string.popular) : getString(R.string.top_rated);
+        setTitle(sortTypeTitle + " " + getString(R.string.movies));
     }
 }
