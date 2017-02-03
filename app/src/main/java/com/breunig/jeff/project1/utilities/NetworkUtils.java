@@ -27,16 +27,16 @@ public final class NetworkUtils {
 
     private static final String format = "json";
 
-    final static String API_KEY_PARAM = "api_key";
-    final static String API_KEY = ""; //TODO: Add API Key https://www.themoviedb.org
-    final static String SORT_TYPE_POPULAR = "popular";
-    final static String SORT_TYPE_TOP_RATED = "top_rated";
+    private final static String API_KEY_PARAM = "api_key";
+    private final static String API_KEY = ""; //TODO: Add API Key https://www.themoviedb.org
+    private final static String SORT_TYPE_POPULAR_PARAM = "popular";
+    private final static String SORT_TYPE_TOP_RATED_PARAM = "top_rated";
 
     private static String getMovieSortTypeString(MovieSortType movieSortType) {
         if (movieSortType == MovieSortType.POPULAR) {
-            return SORT_TYPE_POPULAR;
+            return SORT_TYPE_POPULAR_PARAM;
         } else {
-            return SORT_TYPE_TOP_RATED;
+            return SORT_TYPE_TOP_RATED_PARAM;
         }
     }
 
