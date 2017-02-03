@@ -3,22 +3,24 @@ package com.breunig.jeff.project1.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by jkbreunig on 2/2/17.
  */
 
-public class Movie {
-    public String mTitle;
-    public String mOverview;
-    public String mReleaseDate;
-    public String mVoteAverage;
-    public String mPosterPath;
+public class Movie implements Serializable {
+    public String title;
+    public String overview;
+    public String releaseDate;
+    public String userRating;
+    public String posterPath;
 
     public Movie(JSONObject jsonObject) throws JSONException {
-        this.mTitle = jsonObject.getString("title");
-        this.mOverview = jsonObject.getString("overview");
-        this.mReleaseDate = jsonObject.getString("release_date");
-        this.mVoteAverage = jsonObject.getString("vote_average");
+        this.title = jsonObject.getString("title");
+        this.overview = jsonObject.getString("overview");
+        this.releaseDate = jsonObject.getString("release_date");
+        this.userRating = jsonObject.getString("vote_average");
     }
 
 }

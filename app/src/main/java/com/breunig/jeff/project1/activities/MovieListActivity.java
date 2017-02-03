@@ -72,7 +72,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         Context context = this;
         Class destinationClass = MovieDetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, "");
+        intentToStartDetailActivity.putExtra("MOVIE", movie);
         startActivity(intentToStartDetailActivity);
     }
 

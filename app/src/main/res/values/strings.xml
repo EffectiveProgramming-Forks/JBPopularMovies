@@ -4,4 +4,7 @@
         An error has occurred. Please try again by clicking REFRESH
     </string>
     <string name="action_sort">Sort</string>
+    <string name="release_date">Release Date</string>
+    <string name="user_rating">User rating</string>
+    <string name="not_available">NA</string>
 </resources>
