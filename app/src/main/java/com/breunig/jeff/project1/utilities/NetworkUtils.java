@@ -3,6 +3,8 @@ package com.breunig.jeff.project1.utilities;
 import android.net.Uri;
 import android.util.Log;
 
+import com.breunig.jeff.project1.models.MovieSortType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -11,7 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Scanner;
-import com.breunig.jeff.project1.models.MovieSortType;
 
 /**
  * Created by jkbreunig on 2/2/17.
@@ -58,9 +59,9 @@ public final class NetworkUtils {
         return url;
     }
 
-    public static String buildMoviePosterUrlString(String posterPath) {
+    public static String buildMoviePosterUrlString(String posterPath, int itemWidth) {
         Uri builtUri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
-                .appendPath("w780/")
+                .appendPath(getPosterWidthParam(itemWidth))
                 .appendPath(posterPath)
                 .build();
 
@@ -71,6 +72,24 @@ public final class NetworkUtils {
             Log.d(TAG, "Movie poster url string exception " + e.getLocalizedMessage());
         }
         return urlString;
+    }
+
+    private static String getPosterWidthParam(int itemWidth) {
+        String widthParam;
+        if (itemWidth <= 92) {
+            widthParam = "w92";
+        } else if (itemWidth <= 154) {
+            widthParam = "w154";
+        } else if (itemWidth <= 185) {
+            widthParam = "w185";
+        } else if (itemWidth <= 342) {
+            widthParam = "w342";
+        } else if (itemWidth <= 500) {
+            widthParam = "w500";
+        } else {
+            widthParam = "w780";
+        }
+        return widthParam;
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

@@ -3,10 +3,11 @@ package com.breunig.jeff.project1.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,13 +15,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler;
-import com.breunig.jeff.project1.adapters.MovieListAdapter;
 import com.breunig.jeff.project1.R;
+import com.breunig.jeff.project1.adapters.MovieListAdapter;
+import com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler;
+import com.breunig.jeff.project1.models.Movie;
+import com.breunig.jeff.project1.models.MovieSortType;
 import com.breunig.jeff.project1.utilities.MovieJsonUtils;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
-import com.breunig.jeff.project1.models.MovieSortType;
-import com.breunig.jeff.project1.models.Movie;
 
 import java.net.URL;
 
@@ -29,13 +30,20 @@ import java.net.URL;
  */
 
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
+    public static final int numberOfColumns = 2;
+    private int mColumnWidth;
     private MovieSortType movieSortType = MovieSortType.POPULAR;
     private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
-
     private TextView mErrorMessageDisplay;
-
     private ProgressBar mLoadingIndicator;
+
+    private int calculateColumnWidth(Context context) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int width = (int) (displayMetrics.widthPixels / MovieListActivity.numberOfColumns);
+        return width;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +51,17 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         setContentView(R.layout.activity_movie_list);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_list);
+        mColumnWidth = calculateColumnWidth(mRecyclerView.getContext());
 
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager layoutManager
+                = new GridLayoutManager(this, numberOfColumns);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mMovieListAdapter = new MovieListAdapter(this);
+        mMovieListAdapter = new MovieListAdapter(this, mColumnWidth);
 
         mRecyclerView.setAdapter(mMovieListAdapter);
 
@@ -73,6 +82,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         Class destinationClass = MovieDetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
         intentToStartDetailActivity.putExtra("MOVIE", movie);
+        intentToStartDetailActivity.putExtra("POSTER_WIDTH", mColumnWidth);
         startActivity(intentToStartDetailActivity);
     }
 

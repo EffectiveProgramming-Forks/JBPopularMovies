@@ -1,15 +1,17 @@
 package com.breunig.jeff.project1.utilities;
 
-import android.content.ContentValues;
 import android.content.Context;
+
+import com.breunig.jeff.project1.models.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-
-import com.breunig.jeff.project1.models.Movie;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by jkbreunig on 2/2/17.
@@ -51,5 +53,18 @@ public final class MovieJsonUtils {
         }
 
         return movies;
+    }
+
+    public static String formatDateString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        SimpleDateFormat formatOut = new SimpleDateFormat("MMM d, yyyy");
+        return formatOut.format(date);
     }
 }

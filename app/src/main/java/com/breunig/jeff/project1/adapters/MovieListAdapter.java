@@ -5,14 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.models.Movie;
+import com.breunig.jeff.project1.utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder> {
 
     private Movie[] mMovies;
+    private int mColumnWidth;
 
     private final com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler mClickHandler;
 
@@ -20,16 +23,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
         void onClick(Movie movie);
     }
 
-    public MovieListAdapter(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler clickHandler) {
+    public MovieListAdapter(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler clickHandler, int columnWidth) {
         mClickHandler = clickHandler;
+        mColumnWidth = columnWidth;
     }
 
     public class MovieListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView mMovieTextView;
+        public final ImageView mMovieImageView;
 
         public MovieListAdapterViewHolder(View view) {
             super(view);
-            mMovieTextView = (TextView) view.findViewById(R.id.tv_movie_data);
+            mMovieImageView = (ImageView) view.findViewById(R.id.iv_poster);;
             view.setOnClickListener(this);
         }
 
@@ -52,9 +56,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
     }
 
     @Override
-    public void onBindViewHolder(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder movieListAdapterViewHolder, int position) {
+    public void onBindViewHolder(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder viewHolder, int position) {
         Movie movie = mMovies[position];
-        movieListAdapterViewHolder.mMovieTextView.setText(movie.title);
+        ImageView imageView = viewHolder.mMovieImageView;
+        int imageHeight = (int) (mColumnWidth * 1.5);
+        Picasso.with(imageView.getContext())
+                .load(NetworkUtils.buildMoviePosterUrlString(movie.posterPath, mColumnWidth))
+                .resize(mColumnWidth, imageHeight)
+                .centerCrop()
+                .into(imageView);
     }
 
     @Override
