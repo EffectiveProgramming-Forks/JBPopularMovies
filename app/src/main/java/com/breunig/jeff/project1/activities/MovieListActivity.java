@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler;
 import com.breunig.jeff.project1.adapters.MovieListAdapter;
 import com.breunig.jeff.project1.R;
+import com.breunig.jeff.project1.utilities.MovieJsonUtils;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.breunig.jeff.project1.models.MovieSortType;
+import com.breunig.jeff.project1.models.Movie;
 
 import java.net.URL;
 
@@ -66,7 +68,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     }
 
     @Override
-    public void onClick(String movie) {
+    public void onClick(Movie movie) {
         Context context = this;
         Class destinationClass = MovieDetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
@@ -84,17 +86,17 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected Movie[] doInBackground(String... params) {
 
             URL movieRequestUrl = NetworkUtils.buildMovieListUrl(movieSortType);
 
             try {
                 String jsonMovieResponse = NetworkUtils
                         .getResponseFromHttpUrl(movieRequestUrl);
-                return new String[]{""};
+                return MovieJsonUtils.getMoviesFromJson(MovieListActivity.this, jsonMovieResponse);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -102,11 +104,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         }
 
         @Override
-        protected void onPostExecute(String[] movieData) {
+        protected void onPostExecute(Movie[] movies) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieData != null) {
+            if (movies != null) {
                 showMovieDataView();
-                mMovieListAdapter.setMovieData(movieData);
+                mMovieListAdapter.setMovies(movies);
             } else {
                 showErrorMessage();
             }
@@ -125,7 +127,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         int id = item.getItemId();
 
         if (id == R.id.action_sort) {
-            mMovieListAdapter.setMovieData(null);
+            mMovieListAdapter.setMovies(null);
 
             loadMovieData();
             return true;
