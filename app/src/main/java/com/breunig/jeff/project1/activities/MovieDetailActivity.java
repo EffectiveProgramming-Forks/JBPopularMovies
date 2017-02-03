@@ -1,11 +1,9 @@
-package com.breunig.jeff.project1;
+package com.breunig.jeff.project1.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-/**
- * Created by jkbreunig on 2/2/17.
- */
+import com.breunig.jeff.project1.R;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
