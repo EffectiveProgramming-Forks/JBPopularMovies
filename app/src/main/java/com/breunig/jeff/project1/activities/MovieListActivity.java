@@ -79,7 +79,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     private void loadMovieData() {
         showMoviesView();
-        new com.breunig.jeff.project1.activities.MovieListActivity.FetchMovieTask().execute();
+        new MovieListActivity.FetchMovieTask().execute();
     }
 
     @Override

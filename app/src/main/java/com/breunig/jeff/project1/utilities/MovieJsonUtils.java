@@ -22,7 +22,7 @@ public final class MovieJsonUtils {
     public static Movie[] getMoviesFromJson(Context context, String jsonStr)
             throws JSONException {
 
-        Movie[] movies = null;
+        Movie[] movies;
 
         JSONObject moviesJson = new JSONObject(jsonStr);
 
@@ -33,10 +33,8 @@ public final class MovieJsonUtils {
                 case HttpURLConnection.HTTP_OK:
                     break;
                 case HttpURLConnection.HTTP_NOT_FOUND:
-                    /* Location invalid */
                     return null;
                 default:
-                    /* Server probably down */
                     return null;
             }
         }
@@ -45,8 +43,6 @@ public final class MovieJsonUtils {
         movies = new Movie[moviesJsonArray.length()];
 
         for (int i = 0; i < moviesJsonArray.length(); i++) {
-            String date;
-            String highAndLow;
             JSONObject movieJsonObject = moviesJsonArray.getJSONObject(i);
             Movie movie = new Movie(movieJsonObject);
             movies[i] = movie;

@@ -54,7 +54,7 @@ public final class NetworkUtils {
             e.printStackTrace();
         }
 
-        Log.v(TAG, "Built URI " + url);
+        Log.v(TAG, "Movie list url " + url);
 
         return url;
     }
