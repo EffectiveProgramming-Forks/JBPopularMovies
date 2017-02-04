@@ -30,7 +30,6 @@ import java.net.URL;
  */
 
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
-    public static final int numberOfColumns = 2;
     private int mColumnWidth;
     private MovieSortType mMovieSortType;
     private RecyclerView mRecyclerView;
@@ -38,11 +37,18 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
-    private int calculateColumnWidth(Context context) {
+    private int calculateColumnWidth(Context context, int numberOfColumns) {
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int width = (int) (displayMetrics.widthPixels / MovieListActivity.numberOfColumns);
+        int width = (int) (displayMetrics.widthPixels / numberOfColumns);
         return width;
+    }
+
+    private int calculateNumberOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 180);
+        return noOfColumns;
     }
 
     @Override
@@ -51,7 +57,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         setContentView(R.layout.activity_movie_list);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_list);
-        mColumnWidth = calculateColumnWidth(mRecyclerView.getContext());
+        int numberOfColumns = calculateNumberOfColumns(mRecyclerView.getContext());
+        mColumnWidth = calculateColumnWidth(mRecyclerView.getContext(), numberOfColumns);
 
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
