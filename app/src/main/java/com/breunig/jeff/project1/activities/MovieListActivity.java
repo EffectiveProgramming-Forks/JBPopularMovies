@@ -22,6 +22,9 @@ import com.breunig.jeff.project1.models.MovieSortType;
 import com.breunig.jeff.project1.network.AsyncTaskCompleteListener;
 import com.breunig.jeff.project1.network.FetchMovieTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.breunig.jeff.project1.R.string.movies;
 
 /**
@@ -31,10 +34,10 @@ import static com.breunig.jeff.project1.R.string.movies;
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
     private int mColumnWidth;
     private MovieSortType mMovieSortType;
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview_movie_list) private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
-    private TextView mErrorMessageDisplay;
-    private ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display) private TextView mErrorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator) private ProgressBar mLoadingIndicator;
 
     private int calculateColumnWidth(Context context, int numberOfColumns) {
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
@@ -54,12 +57,10 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
+        ButterKnife.bind(this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_list);
         int numberOfColumns = calculateNumberOfColumns(mRecyclerView.getContext());
         mColumnWidth = calculateColumnWidth(mRecyclerView.getContext(), numberOfColumns);
-
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         GridLayoutManager layoutManager
                 = new GridLayoutManager(this, numberOfColumns);
@@ -70,8 +71,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         mMovieListAdapter = new MovieListAdapter(this, mColumnWidth);
 
         mRecyclerView.setAdapter(mMovieListAdapter);
-
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         updateMovieSortType(MovieSortType.POPULAR);
     }

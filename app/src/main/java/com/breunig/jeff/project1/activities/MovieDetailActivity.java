@@ -11,14 +11,16 @@ import com.breunig.jeff.project1.utilities.MovieJsonUtils;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+
 public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
     private int mPosterWidth;
-    private ImageView mPosterImageView;
-    private TextView mTitleTextView;
-    private TextView mOverviewTextView;
-    private TextView mReleaseDateTextView;
-    private TextView mUserRatingTextView;
+    @BindView(R.id.iv_poster) private ImageView mPosterImageView;
+    @BindView(R.id.tv_title) private TextView mTitleTextView;
+    @BindView(R.id.tv_overview) private TextView mOverviewTextView;
+    @BindView(R.id.tv_release_date) private TextView mReleaseDateTextView;
+    @BindView(R.id.tv_user_rating) private TextView mUserRatingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +31,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mMovie = (Movie) getIntent().getSerializableExtra("MOVIE");
         mPosterWidth = getIntent().getIntExtra("POSTER_WIDTH", 0);
-        mPosterImageView = (ImageView) findViewById(R.id.iv_poster);
         Picasso.with(this).load(NetworkUtils.buildMoviePosterUrlString(mMovie.posterPath, mPosterWidth))
                 .into(mPosterImageView);
 
-        mTitleTextView = (TextView) findViewById(R.id.tv_title);
         mTitleTextView.setText(mMovie.title);
 
-        mOverviewTextView = (TextView) findViewById(R.id.tv_overview);
         mOverviewTextView.setText(mMovie.overview);
 
-        mReleaseDateTextView = (TextView) findViewById(R.id.tv_release_date);
         String formattedReleaseDate = MovieJsonUtils.formatDateString(mMovie.releaseDate);
         if (formattedReleaseDate != null && !formattedReleaseDate.isEmpty()) {
             mReleaseDateTextView.setText(getString(R.string.release_date) + ": " + formattedReleaseDate);
@@ -47,7 +45,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             mReleaseDateTextView.setText(getString(R.string.release_date) + getString(R.string.not_available));
         }
 
-        mUserRatingTextView = (TextView) findViewById(R.id.tv_user_rating);
         String userRating = mMovie.userRating;
         if (userRating != null) {
             mUserRatingTextView.setText(getString(R.string.user_rating) + ": " + userRating + "/ 10");
