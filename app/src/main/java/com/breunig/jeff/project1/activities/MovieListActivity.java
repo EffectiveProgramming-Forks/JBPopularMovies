@@ -2,7 +2,6 @@ package com.breunig.jeff.project1.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,10 +19,10 @@ import com.breunig.jeff.project1.adapters.MovieListAdapter;
 import com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler;
 import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieSortType;
-import com.breunig.jeff.project1.utilities.MovieJsonUtils;
-import com.breunig.jeff.project1.utilities.NetworkUtils;
+import com.breunig.jeff.project1.network.AsyncTaskCompleteListener;
+import com.breunig.jeff.project1.network.FetchMovieTask;
 
-import java.net.URL;
+import static com.breunig.jeff.project1.R.string.movies;
 
 /**
  * Created by jkbreunig on 2/2/17.
@@ -86,7 +85,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     private void loadMovieData() {
         showMoviesView();
-        new MovieListActivity.FetchMovieTask().execute();
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        new FetchMovieTask(this, new FetchMovieTaskCompleteListener(), mMovieSortType).execute();
     }
 
     @Override
@@ -109,31 +109,10 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+    public class FetchMovieTaskCompleteListener implements AsyncTaskCompleteListener<Movie[]> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Movie[] doInBackground(String... params) {
-
-            URL movieRequestUrl = NetworkUtils.buildMovieListUrl(mMovieSortType);
-
-            try {
-                String jsonMovieResponse = NetworkUtils
-                        .getResponseFromHttpUrl(movieRequestUrl);
-                return MovieJsonUtils.getMoviesFromJson(MovieListActivity.this, jsonMovieResponse);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] movies) {
+        public void onTaskComplete(Movie[] movies) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movies != null) {
                 showMoviesView();
@@ -167,6 +146,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     private void updateTitle() {
         String sortTypeTitle = mMovieSortType == MovieSortType.POPULAR ? getString(R.string.popular) : getString(R.string.top_rated);
-        setTitle(sortTypeTitle + " " + getString(R.string.movies));
+        setTitle(sortTypeTitle + " " + getString(movies));
     }
 }
