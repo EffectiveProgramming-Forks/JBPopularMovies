@@ -12,6 +12,7 @@ import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
@@ -28,8 +29,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         setTitle(getString(R.string.movie_detail));
 
         setContentView(R.layout.activity_movie_detail);
+        ButterKnife.bind(this);
 
-        mMovie = (Movie) getIntent().getSerializableExtra("MOVIE");
+        mMovie = (Movie) getIntent().getParcelableExtra("MOVIE");
         mPosterWidth = getIntent().getIntExtra("POSTER_WIDTH", 0);
         Picasso.with(this).load(NetworkUtils.buildMoviePosterUrlString(mMovie.posterPath, mPosterWidth))
                 .into(mPosterImageView);
