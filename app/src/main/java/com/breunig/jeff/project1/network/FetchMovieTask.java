@@ -23,6 +23,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     public FetchMovieTask(Context ctx, AsyncTaskCompleteListener<Movie[]> listener, MovieSortType movieSortType) {
         mContext = ctx;
         mListener = listener;
+        mMovieSortType = movieSortType;
     }
 
     @Override
