@@ -34,10 +34,10 @@ import static com.breunig.jeff.project1.R.string.movies;
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
     private int mColumnWidth;
     private MovieSortType mMovieSortType;
-    @BindView(R.id.recyclerview_movie_list) private RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerview_movie_list) RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
-    @BindView(R.id.tv_error_message_display) private TextView mErrorMessageDisplay;
-    @BindView(R.id.pb_loading_indicator) private ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
 
     private int calculateColumnWidth(Context context, int numberOfColumns) {
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();

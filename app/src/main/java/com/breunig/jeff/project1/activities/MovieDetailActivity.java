@@ -16,11 +16,11 @@ import butterknife.BindView;
 public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
     private int mPosterWidth;
-    @BindView(R.id.iv_poster) private ImageView mPosterImageView;
-    @BindView(R.id.tv_title) private TextView mTitleTextView;
-    @BindView(R.id.tv_overview) private TextView mOverviewTextView;
-    @BindView(R.id.tv_release_date) private TextView mReleaseDateTextView;
-    @BindView(R.id.tv_user_rating) private TextView mUserRatingTextView;
+    @BindView(R.id.iv_poster) ImageView mPosterImageView;
+    @BindView(R.id.tv_title) TextView mTitleTextView;
+    @BindView(R.id.tv_overview) TextView mOverviewTextView;
+    @BindView(R.id.tv_release_date) TextView mReleaseDateTextView;
+    @BindView(R.id.tv_user_rating) TextView mUserRatingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
