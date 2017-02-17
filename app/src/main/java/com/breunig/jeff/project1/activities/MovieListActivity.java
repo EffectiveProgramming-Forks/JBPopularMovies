@@ -33,9 +33,10 @@ import static com.breunig.jeff.project1.R.string.movies;
 
 public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler  {
     private int mColumnWidth;
-    private MovieSortType mMovieSortType;
-    @BindView(R.id.recyclerview_movie_list) RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
+    private MovieSortType mMovieSortType = MovieSortType.POPULAR;
+    private static final String MOVIE_SORT_TYPE_KEY = "movieSortType";
+    @BindView(R.id.recyclerview_movie_list) RecyclerView mRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
 
@@ -49,7 +50,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private int calculateNumberOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int numberOfColumns = (int) (dpWidth / 180);
+        int numberOfColumns = (int) (dpWidth / 120);
         return numberOfColumns;
     }
 
@@ -72,7 +73,21 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         mRecyclerView.setAdapter(mMovieListAdapter);
 
-        updateMovieSortType(MovieSortType.POPULAR);
+        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
+            mMovieSortType = MovieSortType.fromInt(savedInstanceState
+                    .getInt(MOVIE_SORT_TYPE_KEY));
+            if (mMovieSortType == null) {
+                mMovieSortType = MovieSortType.POPULAR;
+            }
+        }
+
+        updateMovieSortType(mMovieSortType);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(MOVIE_SORT_TYPE_KEY, mMovieSortType.getIntValue());
     }
 
     private void updateMovieSortType(MovieSortType movieSortType) {

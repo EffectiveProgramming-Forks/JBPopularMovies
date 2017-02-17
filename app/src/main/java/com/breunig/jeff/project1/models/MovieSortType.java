@@ -5,5 +5,24 @@ package com.breunig.jeff.project1.models;
  */
 
 public enum MovieSortType {
-    POPULAR,  TOP_RATED
+    POPULAR(0),  TOP_RATED(1);
+
+    private int mIntValue;
+
+    MovieSortType(int value) {
+        mIntValue = value;
+    }
+
+    public int getIntValue() {
+        return mIntValue;
+    }
+
+    public static MovieSortType fromInt(int intValue) {
+        for (MovieSortType sortType : MovieSortType.values()) {
+            if (sortType.getIntValue() == intValue) {
+                return sortType;
+            }
+        }
+        return null;
+    }
 }
