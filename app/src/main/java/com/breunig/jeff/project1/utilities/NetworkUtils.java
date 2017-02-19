@@ -24,15 +24,16 @@ public final class NetworkUtils {
 
     private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String MOVIE_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
-    // /movie/{movie_id}/videos
-    // /movie/{id}/reviews
-    private static final String format = "json";
 
     private final static String API_KEY_PARAM = "api_key";
     private final static String API_KEY = "3037ded6b1bfd00afee7eb91f13fdf0c"; //TODO: Add API Key https://www.themoviedb.org
     private final static String SORT_TYPE_POPULAR_PATH = "popular";
     private final static String SORT_TYPE_TOP_RATED_PATH = "top_rated";
     private final static String REVIEWS_PATH = "reviews";
+    private final static String TRAILERS_PATH = "videos";
+
+    private static final String MOVIE_TRAILER_POSTER_BASE_URL = "http://img.youtube.com/vi/";
+    private static final String MOVIE_TRAILER_POSTER_URL_SUFFIX = "/0.jpg";
 
     private static String getMovieSortTypeString(MovieSortType movieSortType) {
         if (movieSortType == MovieSortType.POPULAR) {
@@ -81,10 +82,45 @@ public final class NetworkUtils {
         return url;
     }
 
+    public static URL buildMovieTrailerListUrl(int movieId) {
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(movieId))
+                .appendPath(TRAILERS_PATH)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Movie trailer list url " + url);
+
+        return url;
+    }
+
     public static String buildMoviePosterUrlString(String posterPath, int itemWidth) {
+        Uri builtUri = Uri.parse(MOVIE_TRAILER_POSTER_BASE_URL).buildUpon()
+                .appendPath(posterPath)
+                .appendPath(MOVIE_TRAILER_POSTER_URL_SUFFIX)
+                .build();
+
+        String urlString = null;
+        try {
+            urlString = URLDecoder.decode(builtUri.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.d(TAG, "Movie poster url string exception " + e.getLocalizedMessage());
+        }
+        return urlString;
+    }
+
+    public static String buildMovieTrailerPosterUrlString(String trailerKey, int itemWidth) {
         Uri builtUri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
                 .appendPath(getPosterWidthParam(itemWidth))
-                .appendPath(posterPath)
+                .appendPath(trailerKey)
                 .build();
 
         String urlString = null;

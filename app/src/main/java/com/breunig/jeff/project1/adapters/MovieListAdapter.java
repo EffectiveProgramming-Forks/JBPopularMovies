@@ -17,13 +17,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
     private Movie[] mMovies;
     private int mColumnWidth;
 
-    private final com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler mClickHandler;
+    private final MovieListAdapter.MovieListAdapterOnClickHandler mClickHandler;
 
     public interface MovieListAdapterOnClickHandler {
         void onClick(Movie movie);
     }
 
-    public MovieListAdapter(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler clickHandler, int columnWidth) {
+    public MovieListAdapter(MovieListAdapter.MovieListAdapterOnClickHandler clickHandler, int columnWidth) {
         mClickHandler = clickHandler;
         mColumnWidth = columnWidth;
     }
@@ -45,7 +45,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
         }
     }
 
-    public com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public MovieListAdapter.MovieListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movie_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -56,7 +56,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
     }
 
     @Override
-    public void onBindViewHolder(com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder viewHolder, int position) {
+    public void onBindViewHolder(MovieListAdapter.MovieListAdapterViewHolder viewHolder, int position) {
         Movie movie = mMovies[position];
         ImageView imageView = viewHolder.mMovieImageView;
         int imageHeight = (int) (mColumnWidth * 1.5);

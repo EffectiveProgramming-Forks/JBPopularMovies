@@ -5,6 +5,7 @@ import android.content.Context;
 import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieReview;
 import com.breunig.jeff.project1.models.MovieReviews;
+import com.breunig.jeff.project1.models.MovieTrailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.breunig.jeff.project1.R.string.movies;
 
 /**
  * Created by jkbreunig on 2/2/17.
@@ -85,6 +88,38 @@ public final class MovieJsonUtils {
 
         MovieReviews movieReviews = new MovieReviews(reviews, page, totalPages);
         return movieReviews;
+    }
+
+    public static MovieTrailer[] getMovieTrailersFromJson(Context context, String jsonStr)
+            throws JSONException {
+
+        MovieTrailer[] movieTrailers;
+
+        JSONObject movieTrailersJson = new JSONObject(jsonStr);
+
+        if (movieTrailersJson.has("status_code")) {
+            int errorCode = movieTrailersJson.getInt("status_code");
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    return null;
+                default:
+                    return null;
+            }
+        }
+
+        JSONArray movieTrailersJsonArray = movieTrailersJson.getJSONArray("results");
+        movieTrailers = new MovieTrailer[movieTrailersJsonArray.length()];
+
+        for (int i = 0; i < movieTrailersJsonArray.length(); i++) {
+            JSONObject movieTrailerJsonObject = movieTrailersJsonArray.getJSONObject(i);
+            MovieTrailer movieTrailer = new MovieTrailer(movieTrailerJsonObject);
+            movieTrailers[i] = movieTrailer;
+        }
+
+        return movieTrailers;
     }
 
     public static String formatDateString(String dateString) {
