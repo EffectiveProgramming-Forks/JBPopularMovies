@@ -24,11 +24,12 @@ public final class NetworkUtils {
 
     private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String MOVIE_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
-
+    // /movie/{movie_id}/videos
+    // /movie/{id}/reviews
     private static final String format = "json";
 
     private final static String API_KEY_PARAM = "api_key";
-    private final static String API_KEY = ""; //TODO: Add API Key https://www.themoviedb.org
+    private final static String API_KEY = "3037ded6b1bfd00afee7eb91f13fdf0c"; //TODO: Add API Key https://www.themoviedb.org
     private final static String SORT_TYPE_POPULAR_PARAM = "popular";
     private final static String SORT_TYPE_TOP_RATED_PARAM = "top_rated";
 
