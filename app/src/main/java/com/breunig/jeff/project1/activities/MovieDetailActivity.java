@@ -2,10 +2,13 @@ package com.breunig.jeff.project1.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.breunig.jeff.project1.R;
+import com.breunig.jeff.project1.adapters.MovieReviewListAdapter;
 import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieReview;
 import com.breunig.jeff.project1.models.MovieReviews;
@@ -22,6 +25,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
     private MovieReviews mMovieReviews = new MovieReviews();
     private int mPosterWidth;
+    private MovieReviewListAdapter mMovieReviewListAdapter;
+    @BindView(R.id.recyclerview_movie_review_list) RecyclerView mRecyclerView;
     @BindView(R.id.iv_poster) ImageView mPosterImageView;
     @BindView(R.id.tv_title) TextView mTitleTextView;
     @BindView(R.id.tv_overview) TextView mOverviewTextView;
@@ -59,6 +64,15 @@ public class MovieDetailActivity extends AppCompatActivity {
             mUserRatingTextView.setText(getString(R.string.user_rating) + getString(R.string.not_available));
         }
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mMovieReviewListAdapter = new MovieReviewListAdapter();
+
+        mRecyclerView.setAdapter(mMovieReviewListAdapter);
+
         loadMovieReviewData();
     }
 
@@ -72,13 +86,15 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         @Override
         public void onTaskComplete(MovieReviews movieReviews) {
-//            mLoadingIndicator.setVisibility(View.INVISIBLE);
-//            if (movies != null) {
-//                showMoviesView();
-//                mMovieListAdapter.setMovies(movies);
-//            } else {
-//                showErrorMessage();
-//            }
+            //mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mMovieReviews.updatePageResults(movieReviews);
+            if (mMovieReviews.results != null) {
+                //showMoviesView();
+                MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
+                mMovieReviewListAdapter.setMovies(movieReviewArray);
+            } else {
+                //showErrorMessage();
+            }
         }
     }
 }

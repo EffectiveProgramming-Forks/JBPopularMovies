@@ -8,7 +8,7 @@ import java.util.Collections;
  */
 
 public class MovieReviews {
-    ArrayList<MovieReview> results;
+    public ArrayList<MovieReview> results;
     private int page = 1;
     private int total_pages = 1;
 
@@ -22,7 +22,7 @@ public class MovieReviews {
         this.total_pages = totalPages;
     }
 
-    void updatePageResults(MovieReviews movieReviews) {
+    public void updatePageResults(MovieReviews movieReviews) {
         if (this.results == null) {
             this.results = movieReviews.results;
         } else {

@@ -56,6 +56,11 @@
                 android:paddingLeft="@dimen/movie_detail_horizontal_padding"
                 android:paddingRight="@dimen/movie_detail_horizontal_padding"
                 android:textSize="@dimen/movie_detail_details_text_size" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_movie_review_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

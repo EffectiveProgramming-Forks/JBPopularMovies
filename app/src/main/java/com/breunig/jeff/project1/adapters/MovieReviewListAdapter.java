@@ -34,7 +34,7 @@ public class MovieReviewListAdapter extends RecyclerView.Adapter<MovieReviewList
 
     public MovieReviewListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.movie_list_item;
+        int layoutIdForListItem = R.layout.movie_review_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
