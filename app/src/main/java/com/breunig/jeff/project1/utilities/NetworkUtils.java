@@ -30,14 +30,15 @@ public final class NetworkUtils {
 
     private final static String API_KEY_PARAM = "api_key";
     private final static String API_KEY = "3037ded6b1bfd00afee7eb91f13fdf0c"; //TODO: Add API Key https://www.themoviedb.org
-    private final static String SORT_TYPE_POPULAR_PARAM = "popular";
-    private final static String SORT_TYPE_TOP_RATED_PARAM = "top_rated";
+    private final static String SORT_TYPE_POPULAR_PATH = "popular";
+    private final static String SORT_TYPE_TOP_RATED_PATH = "top_rated";
+    private final static String REVIEWS_PATH = "reviews";
 
     private static String getMovieSortTypeString(MovieSortType movieSortType) {
         if (movieSortType == MovieSortType.POPULAR) {
-            return SORT_TYPE_POPULAR_PARAM;
+            return SORT_TYPE_POPULAR_PATH;
         } else {
-            return SORT_TYPE_TOP_RATED_PARAM;
+            return SORT_TYPE_TOP_RATED_PATH;
         }
     }
 
@@ -56,6 +57,26 @@ public final class NetworkUtils {
         }
 
         Log.v(TAG, "Movie list url " + url);
+
+        return url;
+    }
+
+    public static URL buildMovieReviewListUrl(int movieId) {
+        Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                .appendPath(String.valueOf(movieId))
+                .appendPath(REVIEWS_PATH)
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Movie review list url " + url);
 
         return url;
     }

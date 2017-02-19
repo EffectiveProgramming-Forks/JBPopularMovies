@@ -11,6 +11,7 @@ import org.json.JSONObject;
  */
 
 public class Movie implements Parcelable {
+    public int movieId;
     public String title;
     public String overview;
     public String releaseDate;
@@ -18,6 +19,7 @@ public class Movie implements Parcelable {
     public String posterPath;
 
     public Movie(JSONObject jsonObject) throws JSONException {
+        this.movieId = jsonObject.getInt("id");
         this.title = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
         this.releaseDate = jsonObject.getString("release_date");
@@ -26,6 +28,7 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
+        movieId = in.readInt();
         title = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
@@ -40,6 +43,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(movieId);
         dest.writeString(title);
         dest.writeString(overview);
         dest.writeString(releaseDate);

@@ -1,12 +1,16 @@
 package com.breunig.jeff.project1.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.models.Movie;
+import com.breunig.jeff.project1.models.MovieReview;
+import com.breunig.jeff.project1.models.MovieReviews;
+import com.breunig.jeff.project1.network.AsyncTaskCompleteListener;
+import com.breunig.jeff.project1.network.FetchMovieReviewTask;
 import com.breunig.jeff.project1.utilities.MovieJsonUtils;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -16,6 +20,7 @@ import butterknife.ButterKnife;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
+    private MovieReviews mMovieReviews = new MovieReviews();
     private int mPosterWidth;
     @BindView(R.id.iv_poster) ImageView mPosterImageView;
     @BindView(R.id.tv_title) TextView mTitleTextView;
@@ -52,6 +57,28 @@ public class MovieDetailActivity extends AppCompatActivity {
             mUserRatingTextView.setText(getString(R.string.user_rating) + ": " + userRating + "/ 10");
         } else {
             mUserRatingTextView.setText(getString(R.string.user_rating) + getString(R.string.not_available));
+        }
+
+        loadMovieReviewData();
+    }
+
+    private void loadMovieReviewData() {
+        //showMoviesView();
+        //mLoadingIndicator.setVisibility(View.VISIBLE);
+        new FetchMovieReviewTask(this, new FetchMovieReviewTaskCompleteListener(), mMovie.movieId).execute();
+    }
+
+    public class FetchMovieReviewTaskCompleteListener implements AsyncTaskCompleteListener<MovieReviews> {
+
+        @Override
+        public void onTaskComplete(MovieReviews movieReviews) {
+//            mLoadingIndicator.setVisibility(View.INVISIBLE);
+//            if (movies != null) {
+//                showMoviesView();
+//                mMovieListAdapter.setMovies(movies);
+//            } else {
+//                showErrorMessage();
+//            }
         }
     }
 }
