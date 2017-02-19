@@ -8,8 +8,8 @@ import org.json.JSONObject;
  */
 
 public class MovieReview {
-    String author;
-    String content;
+    public String author;
+    public String content;
 
     public MovieReview(JSONObject jsonObject) throws JSONException {
         this.author = jsonObject.getString("author");
