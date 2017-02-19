@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.breunig.jeff.project1.R.string.movies;
-
 /**
  * Created by jkbreunig on 2/2/17.
  */
@@ -131,7 +129,7 @@ public final class MovieJsonUtils {
             e.printStackTrace();
             return null;
         }
-        SimpleDateFormat formatOut = new SimpleDateFormat("MMM d, yyyy");
+        SimpleDateFormat formatOut = new SimpleDateFormat("MMMM d, yyyy");
         return formatOut.format(date);
     }
 }

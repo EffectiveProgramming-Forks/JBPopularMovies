@@ -2,6 +2,7 @@
     <string name="app_name">Movies</string>
     <string name="movies">movies</string>
     <string name="movie_detail">Movie detail</string>
+    <string name="movie_reviews">Movie reviews</string>
     <string name="error_message">
         An error has occurred. Please try again by clicking REFRESH
     </string>
@@ -10,4 +11,5 @@
     <string name="release_date">Release Date</string>
     <string name="user_rating">User rating</string>
     <string name="not_available">NA</string>
+    <string name="more_reviews">See more reviews</string>
 </resources>

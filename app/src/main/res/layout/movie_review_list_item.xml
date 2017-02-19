@@ -10,7 +10,8 @@
         android:paddingLeft="@dimen/movie_detail_horizontal_padding"
         android:paddingRight="@dimen/movie_detail_horizontal_padding"
         android:paddingBottom="@dimen/movie_detail_details_bottom_padding"
-        android:textSize="@dimen/movie_detail_details_text_size" />
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/movie_review_author_text_size" />
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"

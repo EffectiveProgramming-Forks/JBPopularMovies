@@ -1,13 +1,16 @@
 package com.breunig.jeff.project1.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.adapters.MovieReviewListAdapter;
@@ -28,7 +31,7 @@ import butterknife.ButterKnife;
 
 public class MovieDetailActivity extends AppCompatActivity implements MovieTrailerListAdapter.MovieTrailerListAdapterOnClickHandler {
     private Movie mMovie;
-    private MovieReviews mMovieReviews = new MovieReviews();
+    private MovieReviews mMovieReviews;
     private MovieTrailer[] mMovieTrailers;
     private MovieTrailerListAdapter mMovieTrailerListAdapter;
     private int mPosterWidth;
@@ -60,16 +63,12 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         String formattedReleaseDate = MovieJsonUtils.formatDateString(mMovie.releaseDate);
         if (formattedReleaseDate != null && !formattedReleaseDate.isEmpty()) {
-            mReleaseDateTextView.setText(getString(R.string.release_date) + ": " + formattedReleaseDate);
-        } else {
-            mReleaseDateTextView.setText(getString(R.string.release_date) + getString(R.string.not_available));
+            mReleaseDateTextView.setText(formattedReleaseDate);
         }
 
         String userRating = mMovie.userRating;
         if (userRating != null) {
-            mUserRatingTextView.setText(getString(R.string.user_rating) + ": " + userRating + "/ 10");
-        } else {
-            mUserRatingTextView.setText(getString(R.string.user_rating) + getString(R.string.not_available));
+            mUserRatingTextView.setText(userRating + "/ 10");
         }
 
         setupMovieReviews();
@@ -80,11 +79,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     private void setupMovieReviews() {
+        mMovieReviews = new MovieReviews(mMovie.movieId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         mReviewsRecyclerView.setLayoutManager(layoutManager);
-        mReviewsRecyclerView.setHasFixedSize(true);
-
+        mReviewsRecyclerView.setNestedScrollingEnabled(false);
         mMovieReviewListAdapter = new MovieReviewListAdapter();
 
         mReviewsRecyclerView.setAdapter(mMovieReviewListAdapter);
@@ -110,6 +109,16 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
                 //showErrorMessage();
             }
         }
+    }
+
+    public void onClickMoreReviews(View view) {
+        Toast.makeText(this, "did click", Toast.LENGTH_LONG).show();
+        Context context = this;
+        Class destinationClass = MovieReviewListActivity.class;
+        Intent intent = new Intent(context, destinationClass);
+        intent.putExtra("MOVIE_REVIEWS", mMovieReviews);
+        intent.putExtra("MOVIE_TITLE", mMovie.title);
+        startActivity(intent);
     }
 
     private void setupMovieTrailers() {
