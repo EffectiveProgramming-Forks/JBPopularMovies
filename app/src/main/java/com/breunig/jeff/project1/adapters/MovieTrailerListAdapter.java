@@ -63,11 +63,8 @@ public class MovieTrailerListAdapter extends RecyclerView.Adapter<MovieTrailerLi
     public void onBindViewHolder(MovieTrailerListAdapter.MovieTrailerListAdapterViewHolder viewHolder, int position) {
         MovieTrailer movieTrailer = mMovieTrailers[position];
         ImageView imageView = viewHolder.mMovieImageView;
-        int imageHeight = (int) (mColumnWidth * 1.5);
         Picasso.with(imageView.getContext())
-                .load(NetworkUtils.buildMoviePosterUrlString(movieTrailer.key, mColumnWidth))
-                .resize(mColumnWidth, imageHeight)
-                .centerCrop()
+                .load(NetworkUtils.buildMovieTrailerPosterUrlString(movieTrailer.key, mColumnWidth))
                 .into(imageView);
     }
 

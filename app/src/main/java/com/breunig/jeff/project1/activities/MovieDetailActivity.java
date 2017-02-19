@@ -1,6 +1,7 @@
 package com.breunig.jeff.project1.activities;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -112,7 +113,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     private void setupMovieTrailers() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         mTrailersRecyclerView.setLayoutManager(layoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
@@ -145,11 +146,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
     @Override
     public void onClick(MovieTrailer movieTrailer) {
-        Context context = this;
-//        Class destinationClass = MovieDetailActivity.class;
-//        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-//        intentToStartDetailActivity.putExtra("MOVIE", movie);
-//        intentToStartDetailActivity.putExtra("POSTER_WIDTH", mColumnWidth);
-//        startActivity(intentToStartDetailActivity);
+        Uri uri = NetworkUtils.buildMovieTrailerWatchUrl(movieTrailer.key);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 }

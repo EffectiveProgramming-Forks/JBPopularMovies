@@ -32,8 +32,9 @@ public final class NetworkUtils {
     private final static String REVIEWS_PATH = "reviews";
     private final static String TRAILERS_PATH = "videos";
 
-    private static final String MOVIE_TRAILER_POSTER_BASE_URL = "http://img.youtube.com/vi/";
-    private static final String MOVIE_TRAILER_POSTER_URL_SUFFIX = "/0.jpg";
+    private static final String MOVIE_TRAILER_POSTER_BASE_URL = "http://img.youtube.com/vi";
+    private static final String MOVIE_TRAILER_POSTER_URL_SUFFIX = "0.jpg";
+    private static final String MOVIE_TRAILER_WATCH_BASE_URL = "http://www.youtube.com/watch";
 
     private static String getMovieSortTypeString(MovieSortType movieSortType) {
         if (movieSortType == MovieSortType.POPULAR) {
@@ -103,9 +104,9 @@ public final class NetworkUtils {
     }
 
     public static String buildMoviePosterUrlString(String posterPath, int itemWidth) {
-        Uri builtUri = Uri.parse(MOVIE_TRAILER_POSTER_BASE_URL).buildUpon()
+        Uri builtUri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
+                .appendPath(getPosterWidthParam(itemWidth))
                 .appendPath(posterPath)
-                .appendPath(MOVIE_TRAILER_POSTER_URL_SUFFIX)
                 .build();
 
         String urlString = null;
@@ -118,18 +119,28 @@ public final class NetworkUtils {
     }
 
     public static String buildMovieTrailerPosterUrlString(String trailerKey, int itemWidth) {
-        Uri builtUri = Uri.parse(MOVIE_POSTER_BASE_URL).buildUpon()
-                .appendPath(getPosterWidthParam(itemWidth))
+        Uri builtUri = Uri.parse(MOVIE_TRAILER_POSTER_BASE_URL).buildUpon()
                 .appendPath(trailerKey)
+                .appendPath(MOVIE_TRAILER_POSTER_URL_SUFFIX)
                 .build();
 
         String urlString = null;
         try {
             urlString = URLDecoder.decode(builtUri.toString(), "UTF-8");
+            Log.v(TAG, "Movie trailer poster url " + urlString);
         } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, "Movie poster url string exception " + e.getLocalizedMessage());
+            Log.d(TAG, "Movie trailer poster url string exception " + e.getLocalizedMessage());
         }
         return urlString;
+    }
+
+    public static Uri buildMovieTrailerWatchUrl(String trailerKey) {
+        Uri builtUri = Uri.parse(MOVIE_TRAILER_WATCH_BASE_URL).buildUpon()
+                .appendQueryParameter("v", trailerKey)
+                .build();
+
+        Log.v(TAG, "Movie trailer watch url " + builtUri);
+        return builtUri;
     }
 
     private static String getPosterWidthParam(int itemWidth) {
