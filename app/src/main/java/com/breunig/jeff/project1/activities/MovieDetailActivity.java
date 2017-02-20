@@ -2,11 +2,17 @@ package com.breunig.jeff.project1.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -158,5 +164,38 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         Uri uri = NetworkUtils.buildMovieTrailerWatchUrl(movieTrailer.key);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.movie_detail, menu);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        if (favoriteMenuItem != null) {
+            int color = mMovie.isFavorite ? R.color.colorAccent : android.R.color.white;
+            tintMenuIcon(this, favoriteMenuItem, color);
+        }
+        return true;
+    }
+
+    public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
+        Drawable drawable = item.getIcon();
+        Drawable wrapDrawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(wrapDrawable, context.getResources().getColor(color));
+
+        item.setIcon(wrapDrawable);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_favorite) {
+            mMovie.isFavorite = !mMovie.isFavorite;
+            int color = mMovie.isFavorite ? R.color.colorAccent : android.R.color.white;
+            tintMenuIcon(this, item, color);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

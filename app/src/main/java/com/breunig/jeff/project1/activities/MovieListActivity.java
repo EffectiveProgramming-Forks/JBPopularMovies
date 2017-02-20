@@ -154,12 +154,22 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         } else if (id == R.id.action_top_rated) {
             updateMovieSortType(MovieSortType.TOP_RATED);
             return true;
+        } else if (id == R.id.action_favorites) {
+            updateMovieSortType(MovieSortType.FAVORITES);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void updateTitle() {
-        String sortTypeTitle = mMovieSortType == MovieSortType.POPULAR ? getString(R.string.popular) : getString(R.string.top_rated);
+        String sortTypeTitle;
+        if (mMovieSortType == MovieSortType.POPULAR) {
+            sortTypeTitle = "Popular";
+        } else if (mMovieSortType == MovieSortType.TOP_RATED) {
+            sortTypeTitle = "Top rated";
+        } else {
+            sortTypeTitle = "Favorite";
+        }
         setTitle(sortTypeTitle + " " + getString(movies));
     }
 }

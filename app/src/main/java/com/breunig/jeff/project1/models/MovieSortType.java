@@ -5,7 +5,7 @@ package com.breunig.jeff.project1.models;
  */
 
 public enum MovieSortType {
-    POPULAR(0),  TOP_RATED(1);
+    POPULAR(0), TOP_RATED(1), FAVORITES(2);
 
     private int mIntValue;
 

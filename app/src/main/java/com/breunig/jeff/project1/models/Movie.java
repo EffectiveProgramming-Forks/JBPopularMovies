@@ -17,6 +17,7 @@ public class Movie implements Parcelable {
     public String releaseDate;
     public String userRating;
     public String posterPath;
+    public boolean isFavorite;
 
     public Movie(JSONObject jsonObject) throws JSONException {
         this.movieId = jsonObject.getInt("id");
@@ -34,6 +35,7 @@ public class Movie implements Parcelable {
         releaseDate = in.readString();
         userRating = in.readString();
         posterPath = in.readString();
+        isFavorite = in.readByte() != 0x00;
     }
 
     @Override
@@ -49,6 +51,7 @@ public class Movie implements Parcelable {
         dest.writeString(releaseDate);
         dest.writeString(userRating);
         dest.writeString(posterPath);
+        dest.writeByte((byte) (isFavorite ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")
