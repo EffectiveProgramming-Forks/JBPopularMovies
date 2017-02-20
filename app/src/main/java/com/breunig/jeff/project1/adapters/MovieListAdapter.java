@@ -12,7 +12,7 @@ import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder> {
+public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieListAdapterViewHolder> {
 
     private Movie[] mMovies;
     private int mColumnWidth;
@@ -52,7 +52,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<com.breunig.jeff.proj
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        return new com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterViewHolder(view);
+        return new MovieListAdapter.MovieListAdapterViewHolder(view);
     }
 
     @Override

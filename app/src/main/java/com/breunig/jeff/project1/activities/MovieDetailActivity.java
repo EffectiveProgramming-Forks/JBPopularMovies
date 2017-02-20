@@ -10,6 +10,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.adapters.MovieReviewListAdapter;
 import com.breunig.jeff.project1.adapters.MovieTrailerListAdapter;
+import com.breunig.jeff.project1.database.MovieDbHelper;
 import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieReview;
 import com.breunig.jeff.project1.models.MovieReviews;
@@ -42,6 +44,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     private MovieTrailerListAdapter mMovieTrailerListAdapter;
     private int mPosterWidth;
     private MovieReviewListAdapter mMovieReviewListAdapter;
+    private static final String TAG = MovieDetailActivity.class.getSimpleName();
     @BindView(R.id.recyclerview_movie_review_list) RecyclerView mReviewsRecyclerView;
     @BindView(R.id.recyclerview_movie_trailer_list) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.iv_poster) ImageView mPosterImageView;
@@ -82,6 +85,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         setupMovieTrailers();
         loadMovieTrailerData();
+
+        boolean isFavorite = MovieDbHelper.query(this, mMovie.movieId);
+        mMovie.isFavorite = isFavorite;
+        Log.v(TAG, "Movie is favorite " + isFavorite);
+        invalidateOptionsMenu();
     }
 
     private void setupMovieReviews() {
@@ -172,8 +180,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         inflater.inflate(R.menu.movie_detail, menu);
         MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
         if (favoriteMenuItem != null) {
-            int color = mMovie.isFavorite ? R.color.colorAccent : android.R.color.white;
-            tintMenuIcon(this, favoriteMenuItem, color);
+            updateMenuIconColor(favoriteMenuItem);
         }
         return true;
     }
@@ -186,14 +193,28 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         item.setIcon(wrapDrawable);
     }
 
+    private void updateMenuIconColor(MenuItem item) {
+        int color = mMovie.isFavorite ? R.color.colorAccent : android.R.color.white;
+        tintMenuIcon(this, item, color);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_favorite) {
             mMovie.isFavorite = !mMovie.isFavorite;
-            int color = mMovie.isFavorite ? R.color.colorAccent : android.R.color.white;
-            tintMenuIcon(this, item, color);
+            updateMenuIconColor(item);
+            if (mMovie.isFavorite) {
+                boolean didInsert = MovieDbHelper.insert(this, mMovie);
+                if (didInsert == false) {
+                    mMovie.isFavorite = false;
+                    updateMenuIconColor(item);
+                }
+            } else {
+                boolean didDelete = MovieDbHelper.delete(this, mMovie.movieId);
+                updateMenuIconColor(item);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

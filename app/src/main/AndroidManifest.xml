@@ -29,6 +29,11 @@
                 android:value=".activities.MovieListActivity" />
         </activity>
         <activity android:name=".activities.MovieReviewListActivity"></activity>
+
+        <provider
+            android:name="com.breunig.jeff.project1.database.MovieContentProvider"
+            android:authorities="com.breunig.jeff.project1"
+            android:exported="false"/>
     </application>
 
 </manifest>

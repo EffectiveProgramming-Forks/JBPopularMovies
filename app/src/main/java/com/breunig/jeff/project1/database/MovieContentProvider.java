@@ -1,7 +1,7 @@
 package com.breunig.jeff.project1.database;
 
 /**
- * Created by jkbreunig on 2/19/17.
+ * Created by jkbreunig on 2/20/17.
  */
 
 import android.content.ContentProvider;
@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
 
 import static com.breunig.jeff.project1.database.MovieContract.MovieEntry.TABLE_NAME;
 
-public class FavoriteMovieProvider extends ContentProvider {
+public class MovieContentProvider extends ContentProvider {
 
     public static final int MOVIES = 100;
     public static final int MOVIE_WITH_ID = 101;
@@ -28,7 +28,6 @@ public class FavoriteMovieProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
-        /* This URI is content://com.example.android.sunshine/weather/ */
         matcher.addURI(authority, MovieContract.PATH_MOVIES, MOVIES);
 
         matcher.addURI(authority, MovieContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
@@ -86,6 +85,19 @@ public class FavoriteMovieProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+            case MOVIE_WITH_ID:
+
+                String movidId = uri.getLastPathSegment();
+                String[] selectionArguments = new String[]{movidId};
+
+                retCursor = db.query(TABLE_NAME,
+                        projection,
+                        MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ",
+                        selectionArguments,
+                        null,
+                        null,
+                        sortOrder);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -103,10 +115,7 @@ public class FavoriteMovieProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         int moviesDeleted;
 
-        // Write the code to delete a single row of data
-        // [Hint] Use selections to delete an item by its row ID
         switch (match) {
-            // Handle the single item case, recognized by the ID included in the URI path
             case MOVIE_WITH_ID:
                 String id = uri.getPathSegments().get(1);
                 moviesDeleted = db.delete(TABLE_NAME, "movie_id=?", new String[]{id});
