@@ -38,10 +38,11 @@ import static com.breunig.jeff.project1.R.string.movies;
  * Created by jkbreunig on 2/2/17.
  */
 
-public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>  {
+public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>, MovieListCursorAdapter.MovieListAdapterOnClickHandler  {
     private int mColumnWidth;
     private MovieListAdapter mMovieListAdapter;
     private MovieListCursorAdapter mFavoriteMovieListAdapter;
+    private int mPosition = RecyclerView.NO_POSITION;
     private MovieSortType mMovieSortType = MovieSortType.POPULAR;
     private static final String MOVIE_SORT_TYPE_KEY = "movieSortType";
     private static final int MOVIE_LOADER_ID = 0;
@@ -81,7 +82,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         mMovieListAdapter = new MovieListAdapter(this, mColumnWidth);
 
-        mRecyclerView.setAdapter(mMovieListAdapter);
+        mFavoriteMovieListAdapter = new MovieListCursorAdapter(this, this, mColumnWidth);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
             mMovieSortType = MovieSortType.fromInt(savedInstanceState
@@ -93,21 +94,25 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         updateMovieSortType(mMovieSortType);
 
-
-        //getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt(MOVIE_SORT_TYPE_KEY, mMovieSortType.getIntValue());
+        super.onSaveInstanceState(outState);
     }
 
     private void updateMovieSortType(MovieSortType movieSortType) {
         mMovieSortType = movieSortType;
         updateTitle();
         mMovieListAdapter.setMovies(null);
-        loadMovieData();
+        if (mMovieSortType == MovieSortType.FAVORITES) {
+            mRecyclerView.setAdapter(mFavoriteMovieListAdapter);
+            loadFavoriteMovieData();
+        } else {
+            mRecyclerView.setAdapter(mMovieListAdapter);
+            loadMovieData();
+        }
     }
 
     private void loadMovieData() {
@@ -120,10 +125,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     public void onClick(Movie movie) {
         Context context = this;
         Class destinationClass = MovieDetailActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra("MOVIE", movie);
-        intentToStartDetailActivity.putExtra("POSTER_WIDTH", mColumnWidth);
-        startActivity(intentToStartDetailActivity);
+        Intent intent = new Intent(context, destinationClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("MOVIE", movie);
+        intent.putExtra("POSTER_WIDTH", mColumnWidth);
+        startActivity(intent);
     }
 
     private void showMoviesView() {
@@ -195,10 +201,14 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     protected void onResume() {
         super.onResume();
 
-        // re-queries for all tasks
-        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+        if (mMovieSortType == MovieSortType.FAVORITES) {
+            loadFavoriteMovieData();
+        }
     }
 
+    private void loadFavoriteMovieData() {
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    }
 
     /**
      * Instantiates and returns a new AsyncTaskLoader with the given ID.
@@ -211,28 +221,19 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         return new AsyncTaskLoader<Cursor>(this) {
 
-            // Initialize a Cursor, this will hold all the task data
             Cursor mTaskData = null;
 
-            // onStartLoading() is called when a loader first starts loading data
             @Override
             protected void onStartLoading() {
                 if (mTaskData != null) {
-                    // Delivers any previously loaded data immediately
                     deliverResult(mTaskData);
                 } else {
-                    // Force a new load
                     forceLoad();
                 }
             }
 
-            // loadInBackground() performs asynchronous loading of data
             @Override
             public Cursor loadInBackground() {
-                // Will implement to load data
-
-                // Query and load all task data in the background; sort by priority
-                // [Hint] use a try/catch block to catch any errors in loading data
 
                 try {
                     return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
@@ -248,7 +249,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
                 }
             }
 
-            // deliverResult sends the result of the load, a Cursor, to the registered listener
             public void deliverResult(Cursor data) {
                 mTaskData = data;
                 super.deliverResult(data);
@@ -257,27 +257,16 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     }
 
-
-    /**
-     * Called when a previously created loader has finished its load.
-     *
-     * @param loader The Loader that has finished.
-     * @param data The data generated by the Loader.
-     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update the data that the adapter uses to create ViewHolders
+        mFavoriteMovieListAdapter.swapCursor(data);
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        mRecyclerView.smoothScrollToPosition(mPosition);
+        if (data.getCount() != 0) showMoviesView();
     }
 
-
-    /**
-     * Called when a previously created loader is being reset, and thus
-     * making its data unavailable.
-     * onLoaderReset removes any references this activity had to the loader's data.
-     *
-     * @param loader The Loader that is being reset.
-     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        mFavoriteMovieListAdapter.swapCursor(null);
     }
 }

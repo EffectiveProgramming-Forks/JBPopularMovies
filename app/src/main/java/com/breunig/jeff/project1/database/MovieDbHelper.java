@@ -18,7 +18,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movies.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,6 +33,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                         MovieEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         MovieEntry.COLUMN_MOVIE_ID       + " INTEGER NOT NULL, "  +
+                        MovieEntry.COLUMN_TITLE       + " INTEGER NOT NULL, "  +
                         MovieEntry.COLUMN_OVERVIEW   + " REAL NOT NULL, "       +
                         MovieEntry.COLUMN_RELEASE_DATE   + " REAL NOT NULL, "   +
                         MovieEntry.COLUMN_USER_RATING   + " REAL NOT NULL, "    +
@@ -45,12 +46,14 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 
     public static boolean insert(Context context, Movie movie) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MovieEntry.COLUMN_MOVIE_ID, movie.movieId);
+        contentValues.put(MovieEntry.COLUMN_TITLE, movie.title);
         contentValues.put(MovieEntry.COLUMN_OVERVIEW, movie.overview);
         contentValues.put(MovieEntry.COLUMN_RELEASE_DATE, movie.releaseDate);
         contentValues.put(MovieEntry.COLUMN_USER_RATING, movie.userRating);

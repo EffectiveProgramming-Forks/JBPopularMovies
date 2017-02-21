@@ -49,13 +49,45 @@ public class MovieListCursorAdapter extends RecyclerView.Adapter<MovieListCursor
 
         @Override
         public void onClick(View v) {
+
+            Movie movie = getMovieAtCursorPosition();
+            mClickHandler.onClick(movie);
+        }
+
+        private String getCursorStringValue(String columnIndex) {
+            int index = mCursor.getColumnIndex(columnIndex);
+            if (index != -1) {
+                return mCursor.getString(index);
+            } else {
+                return null;
+            }
+        }
+
+        private int getCursorIntValue(String columnIndex) {
+            int index = mCursor.getColumnIndex(columnIndex);
+            if (index != -1) {
+                return mCursor.getInt(index);
+            } else {
+                return -1;
+            }
+        }
+
+        private Movie getMovieAtCursorPosition() {
+            if (mCursor == null) {
+                return null;
+            }
             int position = getAdapterPosition();
             mCursor.moveToPosition(position);
-            int posterIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
-            String posterPath = mCursor.getString(posterIndex);
+
             Movie movie = new Movie();
-            movie.posterPath = posterPath;
-            mClickHandler.onClick(movie);
+            movie.movieId = getCursorIntValue(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+            movie.posterPath = getCursorStringValue(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+            movie.title = getCursorStringValue(MovieContract.MovieEntry.COLUMN_TITLE);
+            movie.overview = getCursorStringValue(MovieContract.MovieEntry.COLUMN_OVERVIEW);
+            movie.releaseDate = getCursorStringValue(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+            movie.userRating = getCursorStringValue(MovieContract.MovieEntry.COLUMN_USER_RATING);
+
+            return movie;
         }
     }
 

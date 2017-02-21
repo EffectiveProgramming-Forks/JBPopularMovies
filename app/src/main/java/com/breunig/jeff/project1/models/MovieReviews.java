@@ -27,6 +27,9 @@ public class MovieReviews implements Parcelable {
     }
 
     public void updatePageResults(MovieReviews movieReviews) {
+        if (movieReviews == null) {
+            return;
+        }
         if (this.results == null) {
             this.results = movieReviews.results;
         } else {

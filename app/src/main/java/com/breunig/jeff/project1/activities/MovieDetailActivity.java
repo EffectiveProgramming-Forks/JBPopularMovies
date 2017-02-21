@@ -70,10 +70,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         mOverviewTextView.setText(mMovie.overview);
 
-        String formattedReleaseDate = MovieJsonUtils.formatDateString(mMovie.releaseDate);
-        if (formattedReleaseDate != null && !formattedReleaseDate.isEmpty()) {
+        if (mMovie.releaseDate != null) {
+            String formattedReleaseDate = MovieJsonUtils.formatDateString(mMovie.releaseDate);
             mReleaseDateTextView.setText(formattedReleaseDate);
         }
+
+//        if (formattedReleaseDate != null && !formattedReleaseDate.isEmpty()) {
+//            mReleaseDateTextView.setText(formattedReleaseDate);
+//        }
 
         String userRating = mMovie.userRating;
         if (userRating != null) {
