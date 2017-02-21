@@ -1,16 +1,28 @@
 <resources>
+    <!-- Activity title -->
     <string name="app_name">Movies</string>
     <string name="movies">movies</string>
-    <string name="movie_detail">Movie detail</string>
-    <string name="movie_reviews">Movie reviews</string>
+    <string name="popular_movies">Popular movies</string>
+    <string name="top_rated_movies">Top rated movies</string>
+    <string name="favorite_movies">Favorite movies</string>
+    <string name="movie_details">Movie details</string>
+    <string name="movie_reviews">Movie Reviews</string>
+
+    <!-- Error messages -->
     <string name="network_error_message">An error has occurred. Please try again by clicking REFRESH</string>
     <string name="no_database_content_message">No movies to display.</string>
+    <string name="not_available">NA</string>
+
+    <!-- Movie sort types -->
     <string name="popular">Popular</string>
     <string name="top_rated">Top rated</string>
     <string name="favorites">Favorites</string>
+
+    <!-- Movie details -->
     <string name="release_date">Release Date</string>
     <string name="user_rating">User rating</string>
-    <string name="not_available">NA</string>
+
+    <!-- Movie reviews -->
     <string name="reviews">Reviews</string>
     <string name="more_reviews">Read all reviews</string>
 </resources>

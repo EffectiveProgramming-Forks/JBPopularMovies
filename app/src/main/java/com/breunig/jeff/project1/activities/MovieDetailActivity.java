@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.adapters.MovieReviewListAdapter;
@@ -56,7 +55,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getString(R.string.movie_detail));
+        setTitle(getString(R.string.movie_details));
 
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
@@ -120,7 +119,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     public void onClickMoreReviews(View view) {
-        Toast.makeText(this, "did click", Toast.LENGTH_LONG).show();
         Context context = this;
         Class destinationClass = MovieReviewListActivity.class;
         Intent intent = new Intent(context, destinationClass);

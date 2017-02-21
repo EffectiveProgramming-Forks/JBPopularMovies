@@ -32,8 +32,6 @@ import com.breunig.jeff.project1.network.FetchMovieTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.breunig.jeff.project1.R.string.movies;
-
 /**
  * Created by jkbreunig on 2/2/17.
  */
@@ -206,13 +204,13 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private void updateTitle() {
         String sortTypeTitle;
         if (mMovieSortType == MovieSortType.POPULAR) {
-            sortTypeTitle = "Popular";
+            sortTypeTitle = getString(R.string.popular_movies);
         } else if (mMovieSortType == MovieSortType.TOP_RATED) {
-            sortTypeTitle = "Top rated";
+            sortTypeTitle = getString(R.string.top_rated_movies);
         } else {
-            sortTypeTitle = "Favorite";
+            sortTypeTitle = getString(R.string.favorite_movies);
         }
-        setTitle(sortTypeTitle + " " + getString(movies));
+        setTitle(sortTypeTitle);
     }
 
 
