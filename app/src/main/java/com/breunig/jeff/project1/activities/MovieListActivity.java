@@ -38,7 +38,8 @@ import static com.breunig.jeff.project1.R.string.movies;
  * Created by jkbreunig on 2/2/17.
  */
 
-public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>, MovieListCursorAdapter.MovieListAdapterOnClickHandler  {
+public class MovieListActivity extends AppCompatActivity implements MovieListAdapterOnClickHandler,
+        LoaderManager.LoaderCallbacks<Cursor>, MovieListCursorAdapter.MovieListAdapterOnClickHandler  {
     private int mColumnWidth;
     private MovieListAdapter mMovieListAdapter;
     private MovieListCursorAdapter mFavoriteMovieListAdapter;
@@ -97,6 +98,18 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
+            mMovieSortType = MovieSortType.fromInt(savedInstanceState
+                    .getInt(MOVIE_SORT_TYPE_KEY));
+            if (mMovieSortType == null) {
+                mMovieSortType = MovieSortType.POPULAR;
+            }
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(MOVIE_SORT_TYPE_KEY, mMovieSortType.getIntValue());
         super.onSaveInstanceState(outState);
@@ -121,12 +134,17 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         new FetchMovieTask(this, new FetchMovieTaskCompleteListener(), mMovieSortType).execute();
     }
 
+    private void loadFavoriteMovieData() {
+        showMoviesView();
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+    }
+
     @Override
     public void onClick(Movie movie) {
         Context context = this;
         Class destinationClass = MovieDetailActivity.class;
         Intent intent = new Intent(context, destinationClass);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("MOVIE", movie);
         intent.putExtra("POSTER_WIDTH", mColumnWidth);
         startActivity(intent);
@@ -139,6 +157,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     private void showErrorMessage() {
         mRecyclerView.setVisibility(View.INVISIBLE);
+        if (mMovieSortType == MovieSortType.FAVORITES) {
+            mErrorMessageDisplay.setText(R.string.no_database_content_message);
+        } else {
+            mErrorMessageDisplay.setText(R.string.network_error_message);
+        }
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -192,11 +215,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         setTitle(sortTypeTitle + " " + getString(movies));
     }
 
-    /**
-     * This method is called after this activity has been paused or restarted.
-     * Often, this is after new data has been inserted through an AddTaskActivity,
-     * so this restarts the loader to re-query the underlying data for any changes.
-     */
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -206,16 +225,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         }
     }
 
-    private void loadFavoriteMovieData() {
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
-    }
-
-    /**
-     * Instantiates and returns a new AsyncTaskLoader with the given ID.
-     * This loader will return task data as a Cursor or null if an error occurs.
-     *
-     * Implements the required callbacks to take care of loading data at all stages of loading.
-     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
@@ -254,19 +263,26 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
                 super.deliverResult(data);
             }
         };
-
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         mFavoriteMovieListAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
-        if (data.getCount() != 0) showMoviesView();
+
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        if (data.getCount() != 0) {
+            showMoviesView();
+        } else {
+            showErrorMessage();
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
         mFavoriteMovieListAdapter.swapCursor(null);
     }
 }

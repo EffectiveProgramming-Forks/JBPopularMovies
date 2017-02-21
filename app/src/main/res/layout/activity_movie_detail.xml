@@ -43,7 +43,8 @@
                     android:paddingRight="@dimen/movie_detail_horizontal_padding"
                     android:paddingBottom="@dimen/movie_detail_date_bottom_padding"
                     android:textColor="@color/colorPrimary"
-                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:textSize="@dimen/movie_detail_release_date_text_size" />
                 <TextView
                     android:id="@+id/tv_user_rating"
@@ -52,7 +53,8 @@
                     android:paddingRight="@dimen/movie_detail_horizontal_padding"
                     android:paddingBottom="@dimen/movie_detail_details_vertical_padding"
                     android:textColor="@color/colorPrimary"
-                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:textSize="@dimen/movie_detail_rating_text_size" />
                 </LinearLayout>
             </LinearLayout>

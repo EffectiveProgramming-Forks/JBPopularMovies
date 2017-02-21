@@ -75,10 +75,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
             mReleaseDateTextView.setText(formattedReleaseDate);
         }
 
-//        if (formattedReleaseDate != null && !formattedReleaseDate.isEmpty()) {
-//            mReleaseDateTextView.setText(formattedReleaseDate);
-//        }
-
         String userRating = mMovie.userRating;
         if (userRating != null) {
             mUserRatingTextView.setText(userRating + "/ 10");
@@ -108,8 +104,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     private void loadMovieReviewData() {
-        //showMoviesView();
-        //mLoadingIndicator.setVisibility(View.VISIBLE);
         new FetchMovieReviewTask(this, new FetchMovieReviewTaskCompleteListener(), mMovie.movieId).execute();
     }
 
@@ -117,14 +111,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         @Override
         public void onTaskComplete(MovieReviews movieReviews) {
-            //mLoadingIndicator.setVisibility(View.INVISIBLE);
             mMovieReviews.updatePageResults(movieReviews);
             if (mMovieReviews.results != null) {
-                //showMoviesView();
                 MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
                 mMovieReviewListAdapter.setMovieReviews(mMovie.title, movieReviewArray, false);
-            } else {
-                //showErrorMessage();
             }
         }
     }
@@ -151,8 +141,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     private void loadMovieTrailerData() {
-        //showMoviesView();
-        //mLoadingIndicator.setVisibility(View.VISIBLE);
         new FetchMovieTrailerTask(this, new FetchMovieTrailerTaskCompleteListener(), mMovie.movieId).execute();
     }
 
@@ -163,10 +151,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
             //mLoadingIndicator.setVisibility(View.INVISIBLE);
             mMovieTrailers = movieTrailers;
             if (mMovieTrailers != null) {
-                //showMoviesView();
                 mMovieTrailerListAdapter.setMovieTrailers(movieTrailers);
-            } else {
-                //showErrorMessage();
             }
         }
     }
@@ -189,7 +174,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         return true;
     }
 
-    public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
+    private static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
         Drawable drawable = item.getIcon();
         Drawable wrapDrawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(wrapDrawable, context.getResources().getColor(color));

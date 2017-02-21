@@ -3,9 +3,8 @@
     <string name="movies">movies</string>
     <string name="movie_detail">Movie detail</string>
     <string name="movie_reviews">Movie reviews</string>
-    <string name="error_message">
-        An error has occurred. Please try again by clicking REFRESH
-    </string>
+    <string name="network_error_message">An error has occurred. Please try again by clicking REFRESH</string>
+    <string name="no_database_content_message">No movies to display.</string>
     <string name="popular">Popular</string>
     <string name="top_rated">Top rated</string>
     <string name="favorites">Favorites</string>
