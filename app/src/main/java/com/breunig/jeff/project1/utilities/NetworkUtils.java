@@ -31,6 +31,7 @@ public final class NetworkUtils {
     private final static String SORT_TYPE_TOP_RATED_PATH = "top_rated";
     private final static String REVIEWS_PATH = "reviews";
     private final static String TRAILERS_PATH = "videos";
+    private final static String PAGE_PARAM = "page";
 
     private static final String MOVIE_TRAILER_POSTER_BASE_URL = "http://img.youtube.com/vi";
     private static final String MOVIE_TRAILER_POSTER_URL_SUFFIX = "0.jpg";
@@ -63,10 +64,11 @@ public final class NetworkUtils {
         return url;
     }
 
-    public static URL buildMovieReviewListUrl(int movieId) {
+    public static URL buildMovieReviewListUrl(int movieId, int page) {
         Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                 .appendPath(String.valueOf(movieId))
                 .appendPath(REVIEWS_PATH)
+                .appendQueryParameter(PAGE_PARAM, String.valueOf(page))
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 

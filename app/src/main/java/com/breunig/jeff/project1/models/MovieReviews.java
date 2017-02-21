@@ -15,6 +15,9 @@ public class MovieReviews implements Parcelable {
     public ArrayList<MovieReview> results;
     private int page = 1;
     private int total_pages = 1;
+    public int getPage() {
+        return page;
+    }
 
     public MovieReviews(int movieId) {
         this.movieId = movieId;
@@ -35,7 +38,7 @@ public class MovieReviews implements Parcelable {
         } else {
             Collections.addAll(movieReviews.results);
         }
-        page = movieReviews.page;
+        page = movieReviews.page + 1;
         total_pages = movieReviews.total_pages;
     }
 

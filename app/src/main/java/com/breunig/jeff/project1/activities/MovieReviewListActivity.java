@@ -19,6 +19,8 @@ public class MovieReviewListActivity extends AppCompatActivity {
     private String mMovieTitle;
     private MovieReviews mMovieReviews;
     private MovieReviewListAdapter mMovieReviewListAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mIsLoading;
     @BindView(R.id.recyclerview_movie_review_list) RecyclerView mReviewsRecyclerView;
 
     @Override
@@ -31,14 +33,16 @@ public class MovieReviewListActivity extends AppCompatActivity {
 
         mMovieReviews = (MovieReviews) getIntent().getParcelableExtra("MOVIE_REVIEWS");
         mMovieTitle = getIntent().getStringExtra("MOVIE_TITLE");
-        setupMovieReviews();
-        loadMovieReviewData();
+        setupRecyclerView();
+        updateMovieReviewListAdapter();
+        addOnScrollListener();
     }
 
-    private void setupMovieReviews() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    private void setupRecyclerView() {
 
-        mReviewsRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(this);
+
+        mReviewsRecyclerView.setLayoutManager(mLayoutManager);
         mReviewsRecyclerView.setNestedScrollingEnabled(false);
 
         mMovieReviewListAdapter = new MovieReviewListAdapter();
@@ -46,10 +50,37 @@ public class MovieReviewListActivity extends AppCompatActivity {
         mReviewsRecyclerView.setAdapter(mMovieReviewListAdapter);
     }
 
+    private void addOnScrollListener() {
+        mReviewsRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+    }
+
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = mLayoutManager.getChildCount();
+            int totalItemCount = mLayoutManager.getItemCount();
+            int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+
+            if (!mIsLoading && mMovieReviews.isMoreContent()) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    loadMovieReviewData();
+                }
+            }
+        }
+    };
+
     private void loadMovieReviewData() {
         //showMoviesView();
         //mLoadingIndicator.setVisibility(View.VISIBLE);
-        new FetchMovieReviewTask(this, new MovieReviewListActivity.FetchMovieReviewTaskCompleteListener(), mMovieReviews.movieId).execute();
+        mIsLoading = true;
+        new FetchMovieReviewTask(this, new MovieReviewListActivity.FetchMovieReviewTaskCompleteListener(), mMovieReviews.movieId, mMovieReviews.getPage()).execute();
     }
 
     public class FetchMovieReviewTaskCompleteListener implements AsyncTaskCompleteListener<MovieReviews> {
@@ -60,11 +91,16 @@ public class MovieReviewListActivity extends AppCompatActivity {
             mMovieReviews.updatePageResults(movieReviews);
             if (mMovieReviews.results != null) {
                 //showMoviesView();
-                MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
-                mMovieReviewListAdapter.setMovieReviews(mMovieTitle, movieReviewArray, true);
+                updateMovieReviewListAdapter();
             } else {
                 //showErrorMessage();
             }
+            mIsLoading = false;
         }
+    }
+
+    private void updateMovieReviewListAdapter() {
+        MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
+        mMovieReviewListAdapter.setMovieReviews(mMovieTitle, movieReviewArray, true);
     }
 }

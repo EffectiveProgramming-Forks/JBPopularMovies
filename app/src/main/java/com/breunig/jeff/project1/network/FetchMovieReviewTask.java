@@ -18,11 +18,13 @@ public class FetchMovieReviewTask extends AsyncTask<String, Void, MovieReviews> 
     private Context mContext;
     private AsyncTaskCompleteListener<MovieReviews> mListener;
     private int mMovieId;
+    private int mPage;
 
-    public FetchMovieReviewTask(Context ctx, AsyncTaskCompleteListener<MovieReviews> listener, int movieId) {
+    public FetchMovieReviewTask(Context ctx, AsyncTaskCompleteListener<MovieReviews> listener, int movieId, int page) {
         mContext = ctx;
         mListener = listener;
         mMovieId = movieId;
+        mPage = page;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class FetchMovieReviewTask extends AsyncTask<String, Void, MovieReviews> 
     @Override
     protected MovieReviews doInBackground(String... params) {
 
-        URL movieRequestUrl = NetworkUtils.buildMovieReviewListUrl(mMovieId);
+        URL movieRequestUrl = NetworkUtils.buildMovieReviewListUrl(mMovieId, mPage);
 
         try {
             String jsonMovieReviewResponse = NetworkUtils

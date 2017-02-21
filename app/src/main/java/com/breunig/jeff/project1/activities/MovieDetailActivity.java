@@ -103,7 +103,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     }
 
     private void loadMovieReviewData() {
-        new FetchMovieReviewTask(this, new FetchMovieReviewTaskCompleteListener(), mMovie.movieId).execute();
+        new FetchMovieReviewTask(this, new FetchMovieReviewTaskCompleteListener(), mMovie.movieId, mMovieReviews.getPage()).execute();
     }
 
     public class FetchMovieReviewTaskCompleteListener implements AsyncTaskCompleteListener<MovieReviews> {
