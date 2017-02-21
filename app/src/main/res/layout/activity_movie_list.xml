@@ -10,10 +10,7 @@
         android:scrollbars="vertical"/>
 
     <include
-        layout="@layout/error_message"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        layout="@layout/error_message" />
 
     <ProgressBar
         android:id="@+id/pb_loading_indicator"

@@ -9,7 +9,7 @@
     <string name="movie_reviews">Movie Reviews</string>
 
     <!-- Error messages -->
-    <string name="network_error_message">An error has occurred. Please try again by clicking REFRESH</string>
+    <string name="network_error_message">An error has occurred. Please try again later.</string>
     <string name="no_database_content_message">No movies to display.</string>
     <string name="not_available">NA</string>
 
