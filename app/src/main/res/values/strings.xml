@@ -12,5 +12,6 @@
     <string name="release_date">Release Date</string>
     <string name="user_rating">User rating</string>
     <string name="not_available">NA</string>
-    <string name="more_reviews">See more reviews</string>
+    <string name="reviews">Reviews</string>
+    <string name="more_reviews">Read all reviews</string>
 </resources>
