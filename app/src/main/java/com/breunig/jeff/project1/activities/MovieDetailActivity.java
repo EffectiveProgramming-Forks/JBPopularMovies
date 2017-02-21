@@ -122,7 +122,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
             if (mMovieReviews.results != null) {
                 //showMoviesView();
                 MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
-                mMovieReviewListAdapter.setMovies(movieReviewArray);
+                mMovieReviewListAdapter.setMovieReviews(mMovie.title, movieReviewArray, false);
             } else {
                 //showErrorMessage();
             }
