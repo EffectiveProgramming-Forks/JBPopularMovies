@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by jkbreunig on 2/18/17.
@@ -36,7 +35,9 @@ public class MovieReviews implements Parcelable {
         if (this.results == null) {
             this.results = movieReviews.results;
         } else {
-            Collections.addAll(movieReviews.results);
+            if (movieReviews.results != null) {
+                results.addAll(movieReviews.results);
+            }
         }
         page = movieReviews.page + 1;
         total_pages = movieReviews.total_pages;

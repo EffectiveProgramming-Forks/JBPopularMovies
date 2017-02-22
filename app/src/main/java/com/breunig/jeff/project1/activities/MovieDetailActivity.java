@@ -33,6 +33,8 @@ import com.breunig.jeff.project1.utilities.MovieJsonUtils;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,6 +46,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     private int mPosterWidth;
     private MovieReviewListAdapter mMovieReviewListAdapter;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
+    private static int mReviewsToDisplayCount = 1;
     @BindView(R.id.recyclerview_movie_review_list) RecyclerView mReviewsRecyclerView;
     @BindView(R.id.recyclerview_movie_trailer_list) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.iv_poster) ImageView mPosterImageView;
@@ -51,6 +54,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     @BindView(R.id.tv_overview) TextView mOverviewTextView;
     @BindView(R.id.tv_release_date) TextView mReleaseDateTextView;
     @BindView(R.id.tv_user_rating) TextView mUserRatingTextView;
+    @BindView(R.id.tv_more_reviews) TextView mMoreReviewsTextView;
+    @BindView(R.id.tv_reviews_title) TextView mReviewsTitleTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +117,27 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         public void onTaskComplete(MovieReviews movieReviews) {
             mMovieReviews.updatePageResults(movieReviews);
             if (mMovieReviews.results != null) {
-                MovieReview[] movieReviewArray = mMovieReviews.results.toArray(new MovieReview[(mMovieReviews.results.size())]);
+                updateReviewLabelVisibility(mMovieReviews.results.size());
+                int resultCountToDisplay = Math.min(mMovieReviews.results.size(), mReviewsToDisplayCount);
+                ArrayList<MovieReview> displayList = new ArrayList<MovieReview>(mMovieReviews.results.subList(0, resultCountToDisplay));
+                MovieReview[] movieReviewArray = displayList.toArray(new MovieReview[resultCountToDisplay]);
                 mMovieReviewListAdapter.setMovieReviews(mMovie.title, movieReviewArray, false);
+            } else {
+                updateReviewLabelVisibility(0);
             }
+        }
+    }
+
+    private void updateReviewLabelVisibility(int reviewCount) {
+        if (reviewCount == 0) {
+            mReviewsTitleTextView.setVisibility(View.GONE);
+            mMoreReviewsTextView.setVisibility(View.GONE);
+        } else if (reviewCount <= mReviewsToDisplayCount) {
+            mReviewsTitleTextView.setVisibility(View.VISIBLE);
+            mMoreReviewsTextView.setVisibility(View.GONE);
+        } else {
+            mReviewsTitleTextView.setVisibility(View.VISIBLE);
+            mMoreReviewsTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -133,7 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         mTrailersRecyclerView.setLayoutManager(layoutManager);
         mTrailersRecyclerView.setHasFixedSize(true);
 
-        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this, 200);
+        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this, R.dimen.movie_trailer_thumbnail_size);
 
         mTrailersRecyclerView.setAdapter(mMovieTrailerListAdapter);
     }
