@@ -26,7 +26,7 @@ public final class NetworkUtils {
     private static final String MOVIE_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
 
     private final static String API_KEY_PARAM = "api_key";
-    private final static String API_KEY = "3037ded6b1bfd00afee7eb91f13fdf0c"; //TODO: Add API Key https://www.themoviedb.org
+    private final static String API_KEY = ""; //TODO: Add API Key https://www.themoviedb.org
     private final static String SORT_TYPE_POPULAR_PATH = "popular";
     private final static String SORT_TYPE_TOP_RATED_PATH = "top_rated";
     private final static String REVIEWS_PATH = "reviews";
