@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView;
 
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.adapters.MovieReviewListAdapter;
+import com.breunig.jeff.project1.listeners.AsyncTaskCompleteListener;
 import com.breunig.jeff.project1.models.MovieReview;
 import com.breunig.jeff.project1.models.MovieReviews;
-import com.breunig.jeff.project1.network.AsyncTaskCompleteListener;
 import com.breunig.jeff.project1.network.FetchMovieReviewTask;
 
 import butterknife.BindView;
@@ -20,7 +20,6 @@ public class MovieReviewListActivity extends AppCompatActivity {
     private MovieReviews mMovieReviews;
     private MovieReviewListAdapter mMovieReviewListAdapter;
     private LinearLayoutManager mLayoutManager;
-    private boolean mIsLoading;
     @BindView(R.id.recyclerview_movie_review_list) RecyclerView mReviewsRecyclerView;
 
     @Override
@@ -67,7 +66,7 @@ public class MovieReviewListActivity extends AppCompatActivity {
             int totalItemCount = mLayoutManager.getItemCount();
             int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
-            if (!mIsLoading && mMovieReviews.isMoreContent()) {
+            if (!mMovieReviews.isLoading && mMovieReviews.isMoreContent()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0) {
                     loadMovieReviewData();
@@ -77,7 +76,7 @@ public class MovieReviewListActivity extends AppCompatActivity {
     };
 
     private void loadMovieReviewData() {
-        mIsLoading = true;
+        mMovieReviews.isLoading = true;
         new FetchMovieReviewTask(this, new MovieReviewListActivity.FetchMovieReviewTaskCompleteListener(), mMovieReviews.movieId, mMovieReviews.getPage()).execute();
     }
 
@@ -89,7 +88,7 @@ public class MovieReviewListActivity extends AppCompatActivity {
             if (mMovieReviews.results != null) {
                 updateMovieReviewListAdapter();
             }
-            mIsLoading = false;
+            mMovieReviews.isLoading = false;
         }
     }
 

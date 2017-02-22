@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class MovieReviews implements Parcelable {
     public int movieId;
     public ArrayList<MovieReview> results;
+    public boolean isLoading;
     private int page = 1;
     private int total_pages = 1;
     public int getPage() {
@@ -44,6 +45,7 @@ public class MovieReviews implements Parcelable {
     }
 
     public boolean isMoreContent() {
+
         return page <= total_pages;
     }
 

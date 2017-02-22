@@ -45,9 +45,10 @@ public final class NetworkUtils {
         }
     }
 
-    public static URL buildMovieListUrl(MovieSortType movieSortType) {
+    public static URL buildMovieListUrl(MovieSortType movieSortType, int page) {
         Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                 .appendPath(getMovieSortTypeString(movieSortType))
+                .appendQueryParameter(PAGE_PARAM, String.valueOf(page))
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
 

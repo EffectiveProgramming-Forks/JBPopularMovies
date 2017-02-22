@@ -25,9 +25,10 @@ import com.breunig.jeff.project1.adapters.MovieListAdapter;
 import com.breunig.jeff.project1.adapters.MovieListAdapter.MovieListAdapterOnClickHandler;
 import com.breunig.jeff.project1.adapters.MovieListCursorAdapter;
 import com.breunig.jeff.project1.database.MovieContract;
+import com.breunig.jeff.project1.listeners.AsyncTaskCompleteListener;
 import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieSortType;
-import com.breunig.jeff.project1.network.AsyncTaskCompleteListener;
+import com.breunig.jeff.project1.models.Movies;
 import com.breunig.jeff.project1.network.FetchMovieTask;
 
 import butterknife.BindView;
@@ -46,6 +47,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private MovieSortType mMovieSortType = MovieSortType.POPULAR;
     private static final int MOVIE_LOADER_ID = 0;
     private static final String TAG = MovieListActivity.class.getSimpleName();
+    private GridLayoutManager mLayoutManager;
+    private Movies mMovies = new Movies();
     @BindView(R.id.recyclerview_movie_list) RecyclerView mRecyclerView;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
@@ -73,15 +76,16 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         int numberOfColumns = calculateNumberOfColumns(mRecyclerView.getContext());
         mColumnWidth = calculateColumnWidth(mRecyclerView.getContext(), numberOfColumns);
 
-        GridLayoutManager layoutManager
-                = new GridLayoutManager(this, numberOfColumns);
+        mLayoutManager = new GridLayoutManager(this, numberOfColumns);
 
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
         mMovieListAdapter = new MovieListAdapter(this, mColumnWidth);
 
         mFavoriteMovieListAdapter = new MovieListCursorAdapter(this, this, mColumnWidth);
+
+        addOnScrollListener();
 
         retrieveMovieSortType();
         updateMovieSortType(mMovieSortType);
@@ -123,9 +127,10 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     }
 
     private void loadMovieData() {
+        mMovies.isLoading = true;
         showMoviesView();
         mLoadingIndicator.setVisibility(View.VISIBLE);
-        new FetchMovieTask(this, new FetchMovieTaskCompleteListener(), mMovieSortType).execute();
+        new FetchMovieTask(this, new MovieListActivity.FetchMovieTaskCompleteListener(), mMovieSortType, mMovies.getPage()).execute();
     }
 
     private void loadFavoriteMovieData() {
@@ -164,18 +169,25 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    public class FetchMovieTaskCompleteListener implements AsyncTaskCompleteListener<Movie[]> {
+    public class FetchMovieTaskCompleteListener implements AsyncTaskCompleteListener<Movies> {
 
         @Override
-        public void onTaskComplete(Movie[] movies) {
+        public void onTaskComplete(Movies movies) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movies != null) {
+            mMovies.updatePageResults(movies);
+            if (mMovies.results != null) {
                 showMoviesView();
-                mMovieListAdapter.setMovies(movies);
+                updateMovieListAdapter();
             } else {
                 showErrorMessage();
             }
+            mMovies.isLoading = false;
         }
+    }
+
+    private void updateMovieListAdapter() {
+        Movie[] movieArray = mMovies.results.toArray(new Movie[(mMovies.results.size())]);
+        mMovieListAdapter.setMovies(movieArray);
     }
 
     private void storeMovieSortType() {
@@ -229,6 +241,34 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         setTitle(sortTypeTitle);
     }
 
+    private void addOnScrollListener() {
+        mRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+    }
+
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = mLayoutManager.getChildCount();
+            int totalItemCount = mLayoutManager.getItemCount();
+            int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+
+            if (mMovieSortType != MovieSortType.FAVORITES &&
+                    !mMovies.isLoading &&
+                    mMovies.isMoreContent()) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    loadMovieData();
+                }
+            }
+        }
+    };
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
@@ -273,7 +313,9 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         mFavoriteMovieListAdapter.swapCursor(data);
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        if (mPosition == RecyclerView.NO_POSITION) {
+            mPosition = 0;
+        }
         mRecyclerView.smoothScrollToPosition(mPosition);
 
         mLoadingIndicator.setVisibility(View.INVISIBLE);

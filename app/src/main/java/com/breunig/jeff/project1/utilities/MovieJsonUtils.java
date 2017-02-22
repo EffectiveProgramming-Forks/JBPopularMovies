@@ -6,6 +6,7 @@ import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.models.MovieReview;
 import com.breunig.jeff.project1.models.MovieReviews;
 import com.breunig.jeff.project1.models.MovieTrailer;
+import com.breunig.jeff.project1.models.Movies;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,10 +24,8 @@ import java.util.Date;
 
 public final class MovieJsonUtils {
 
-    public static Movie[] getMoviesFromJson(Context context, String jsonStr)
+    public static Movies getMoviesFromJson(Context context, String jsonStr)
             throws JSONException {
-
-        Movie[] movies;
 
         JSONObject moviesJson = new JSONObject(jsonStr);
 
@@ -43,15 +42,18 @@ public final class MovieJsonUtils {
             }
         }
 
+        int page = moviesJson.getInt("page");
+        int totalPages = moviesJson.getInt("total_pages");
         JSONArray moviesJsonArray = moviesJson.getJSONArray("results");
-        movies = new Movie[moviesJsonArray.length()];
+        ArrayList<Movie> moviesList = new ArrayList<Movie>(moviesJsonArray.length());
 
         for (int i = 0; i < moviesJsonArray.length(); i++) {
             JSONObject movieJsonObject = moviesJsonArray.getJSONObject(i);
             Movie movie = new Movie(movieJsonObject);
-            movies[i] = movie;
+            moviesList.add(movie);
         }
 
+        Movies movies = new Movies(moviesList, page, totalPages);
         return movies;
     }
 
