@@ -2,6 +2,7 @@ package com.breunig.jeff.project1.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -43,7 +44,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private MovieListCursorAdapter mFavoriteMovieListAdapter;
     private int mPosition = RecyclerView.NO_POSITION;
     private MovieSortType mMovieSortType = MovieSortType.POPULAR;
-    private static final String MOVIE_SORT_TYPE_KEY = "movieSortType";
     private static final int MOVIE_LOADER_ID = 0;
     private static final String TAG = MovieListActivity.class.getSimpleName();
     @BindView(R.id.recyclerview_movie_list) RecyclerView mRecyclerView;
@@ -83,8 +83,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         mFavoriteMovieListAdapter = new MovieListCursorAdapter(this, this, mColumnWidth);
 
-        updateMovieSortTypeFromBundle(savedInstanceState);
-
+        retrieveMovieSortType();
         updateMovieSortType(mMovieSortType);
 
     }
@@ -101,27 +100,17 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        updateMovieSortTypeFromBundle(savedInstanceState);
-    }
-
-    private void updateMovieSortTypeFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
-            mMovieSortType = MovieSortType.fromInt(savedInstanceState
-                    .getInt(MOVIE_SORT_TYPE_KEY));
-            if (mMovieSortType == null) {
-                mMovieSortType = MovieSortType.POPULAR;
-            }
-        }
+        retrieveMovieSortType();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(MOVIE_SORT_TYPE_KEY, mMovieSortType.getIntValue());
         super.onSaveInstanceState(outState);
     }
 
     private void updateMovieSortType(MovieSortType movieSortType) {
         mMovieSortType = movieSortType;
+        storeMovieSortType();
         updateTitle();
         mMovieListAdapter.setMovies(null);
         if (mMovieSortType == MovieSortType.FAVORITES) {
@@ -186,6 +175,21 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
             } else {
                 showErrorMessage();
             }
+        }
+    }
+
+    private void storeMovieSortType() {
+        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.SHARED_PREFERENCES), MODE_PRIVATE).edit();
+        editor.putInt(getString(R.string.MOVIE_SORT_TYPE_KEY), mMovieSortType.getIntValue());
+        editor.commit();
+    }
+
+    private void retrieveMovieSortType() {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.SHARED_PREFERENCES), MODE_PRIVATE);
+        int value = settings.getInt(getString(R.string.MOVIE_SORT_TYPE_KEY), 0);
+        mMovieSortType = MovieSortType.fromInt(value);
+        if (mMovieSortType == null) {
+            mMovieSortType = MovieSortType.POPULAR;
         }
     }
 

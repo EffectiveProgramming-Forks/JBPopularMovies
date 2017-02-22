@@ -24,6 +24,10 @@
     <string name="EXTRA_MOVIE_REVIEWS">com.breunig.jeff.extra.MOVIE_REVIEWS</string>
     <string name="EXTRA_MOVIE_TITLE">com.breunig.jeff.extra.MOVIE_TITLE</string>
 
+    <!-- Shared preferences -->
+    <string name="SHARED_PREFERENCES">com.breunig.jeff.extra.SHARED_PREFERENCES</string>
+    <string name="MOVIE_SORT_TYPE_KEY">com.breunig.jeff.MOVIE_SORT_TYPE</string>
+
     <!-- Movie details -->
     <string name="release_date">Release Date</string>
     <string name="user_rating">User rating</string>
