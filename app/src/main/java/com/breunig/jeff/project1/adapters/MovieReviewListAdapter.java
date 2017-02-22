@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.breunig.jeff.project1.R;
 import com.breunig.jeff.project1.models.MovieReview;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by jkbreunig on 2/18/17.
  */
@@ -25,22 +28,21 @@ public class MovieReviewListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mAuthorTextView;
-        public TextView mContentTextView;
+        @BindView(R.id.tv_author) TextView mAuthorTextView;
+        @BindView(R.id.tv_content) TextView mContentTextView;
 
         public ViewHolder(View view) {
             super(view);
-            mAuthorTextView = (TextView) view.findViewById(R.id.tv_author);
-            mContentTextView = (TextView) view.findViewById(R.id.tv_content);
+            ButterKnife.bind(this, view);
         }
     }
 
     public class ViewHolderHeader extends RecyclerView.ViewHolder {
-        public TextView mTitleTextView;
+        @BindView(R.id.tv_title) TextView mTitleTextView;
 
         public ViewHolderHeader(View view) {
             super(view);
-            mTitleTextView = (TextView) view.findViewById(R.id.tv_title);
+            ButterKnife.bind(this, view);
         }
     }
 

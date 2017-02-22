@@ -18,6 +18,12 @@
     <string name="top_rated">Top rated</string>
     <string name="favorites">Favorites</string>
 
+    <!-- Intent extras -->
+    <string name="EXTRA_POSTER_WIDTH">com.breunig.jeff.extra.POSTER_WIDTH</string>
+    <string name="EXTRA_MOVIE">com.breunig.jeff.extra.MOVIE</string>
+    <string name="EXTRA_MOVIE_REVIEWS">com.breunig.jeff.extra.MOVIE_REVIEWS</string>
+    <string name="EXTRA_MOVIE_TITLE">com.breunig.jeff.extra.MOVIE_TITLE</string>
+
     <!-- Movie details -->
     <string name="release_date">Release Date</string>
     <string name="user_rating">User rating</string>

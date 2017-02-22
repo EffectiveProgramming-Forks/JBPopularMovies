@@ -31,8 +31,8 @@ public class MovieReviewListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_review_list);
         ButterKnife.bind(this);
 
-        mMovieReviews = (MovieReviews) getIntent().getParcelableExtra("MOVIE_REVIEWS");
-        mMovieTitle = getIntent().getStringExtra("MOVIE_TITLE");
+        mMovieReviews = (MovieReviews) getIntent().getParcelableExtra(getString(R.string.EXTRA_MOVIE_REVIEWS));
+        mMovieTitle = getIntent().getStringExtra(getString(R.string.EXTRA_MOVIE_TITLE));
         setupRecyclerView();
         updateMovieReviewListAdapter();
         addOnScrollListener();
@@ -77,8 +77,6 @@ public class MovieReviewListActivity extends AppCompatActivity {
     };
 
     private void loadMovieReviewData() {
-        //showMoviesView();
-        //mLoadingIndicator.setVisibility(View.VISIBLE);
         mIsLoading = true;
         new FetchMovieReviewTask(this, new MovieReviewListActivity.FetchMovieReviewTaskCompleteListener(), mMovieReviews.movieId, mMovieReviews.getPage()).execute();
     }
@@ -87,13 +85,9 @@ public class MovieReviewListActivity extends AppCompatActivity {
 
         @Override
         public void onTaskComplete(MovieReviews movieReviews) {
-            //mLoadingIndicator.setVisibility(View.INVISIBLE);
             mMovieReviews.updatePageResults(movieReviews);
             if (mMovieReviews.results != null) {
-                //showMoviesView();
                 updateMovieReviewListAdapter();
-            } else {
-                //showErrorMessage();
             }
             mIsLoading = false;
         }

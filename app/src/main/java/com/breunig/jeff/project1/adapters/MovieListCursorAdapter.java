@@ -18,6 +18,9 @@ import com.breunig.jeff.project1.models.Movie;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MovieListCursorAdapter extends RecyclerView.Adapter<MovieListCursorAdapter.MovieListCursorAdapterViewHolder> {
 
@@ -39,11 +42,11 @@ public class MovieListCursorAdapter extends RecyclerView.Adapter<MovieListCursor
     }
 
     class MovieListCursorAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMovieImageView;
+        @BindView(R.id.iv_poster) ImageView mMovieImageView;
 
         public MovieListCursorAdapterViewHolder(View view) {
             super(view);
-            mMovieImageView = (ImageView) view.findViewById(R.id.iv_poster);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 

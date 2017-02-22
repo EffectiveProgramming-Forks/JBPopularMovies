@@ -12,6 +12,9 @@ import com.breunig.jeff.project1.models.MovieTrailer;
 import com.breunig.jeff.project1.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by jkbreunig on 2/19/17.
  */
@@ -19,7 +22,6 @@ import com.squareup.picasso.Picasso;
 public class MovieTrailerListAdapter extends RecyclerView.Adapter<MovieTrailerListAdapter.MovieTrailerListAdapterViewHolder> {
 
     private MovieTrailer[] mMovieTrailers;
-    private int mColumnWidth;
 
     private final MovieTrailerListAdapter.MovieTrailerListAdapterOnClickHandler mClickHandler;
 
@@ -27,17 +29,16 @@ public class MovieTrailerListAdapter extends RecyclerView.Adapter<MovieTrailerLi
         void onClick(MovieTrailer movieTrailer);
     }
 
-    public MovieTrailerListAdapter(MovieTrailerListAdapter.MovieTrailerListAdapterOnClickHandler clickHandler, int columnWidth) {
+    public MovieTrailerListAdapter(MovieTrailerListAdapter.MovieTrailerListAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
-        mColumnWidth = columnWidth;
     }
 
     public class MovieTrailerListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMovieImageView;
+        @BindView(R.id.iv_poster) ImageView mMovieImageView;
 
         public MovieTrailerListAdapterViewHolder(View view) {
             super(view);
-            mMovieImageView = (ImageView) view.findViewById(R.id.iv_poster);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 
@@ -64,14 +65,17 @@ public class MovieTrailerListAdapter extends RecyclerView.Adapter<MovieTrailerLi
         MovieTrailer movieTrailer = mMovieTrailers[position];
         ImageView imageView = viewHolder.mMovieImageView;
         Picasso.with(imageView.getContext())
-                .load(NetworkUtils.buildMovieTrailerPosterUrlString(movieTrailer.key, mColumnWidth))
+                .load(NetworkUtils.buildMovieTrailerPosterUrlString(movieTrailer.key))
                 .into(imageView);
     }
 
     @Override
     public int getItemCount() {
-        if (null == mMovieTrailers) return 0;
-        return mMovieTrailers.length;
+        if (null == mMovieTrailers) {
+            return 0;
+        } else {
+            return mMovieTrailers.length;
+        }
     }
 
     public void setMovieTrailers(MovieTrailer[] movieTrailers) {

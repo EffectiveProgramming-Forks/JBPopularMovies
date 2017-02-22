@@ -59,8 +59,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
     private int calculateNumberOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int numberOfColumns = (int) (dpWidth / 120);
+        float dpWidth = displayMetrics.widthPixels;
+        int numberOfColumns = (int) (dpWidth / (int) getResources().getDimension(R.dimen.movie_poster_min_width));
         return numberOfColumns;
     }
 
@@ -83,21 +83,28 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
 
         mFavoriteMovieListAdapter = new MovieListCursorAdapter(this, this, mColumnWidth);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
-            mMovieSortType = MovieSortType.fromInt(savedInstanceState
-                    .getInt(MOVIE_SORT_TYPE_KEY));
-            if (mMovieSortType == null) {
-                mMovieSortType = MovieSortType.POPULAR;
-            }
-        }
+        updateMovieSortTypeFromBundle(savedInstanceState);
 
         updateMovieSortType(mMovieSortType);
 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mMovieSortType == MovieSortType.FAVORITES) {
+            loadFavoriteMovieData();
+        }
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        updateMovieSortTypeFromBundle(savedInstanceState);
+    }
+
+    private void updateMovieSortTypeFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_SORT_TYPE_KEY)) {
             mMovieSortType = MovieSortType.fromInt(savedInstanceState
                     .getInt(MOVIE_SORT_TYPE_KEY));
@@ -144,8 +151,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
         Context context = this;
         Class destinationClass = MovieDetailActivity.class;
         Intent intent = new Intent(context, destinationClass);
-        intent.putExtra("MOVIE", movie);
-        intent.putExtra("POSTER_WIDTH", mColumnWidth);
+        intent.putExtra(getString(R.string.EXTRA_MOVIE), movie);
+        intent.putExtra(getString(R.string.EXTRA_POSTER_WIDTH), mColumnWidth);
         startActivity(intent);
     }
 
@@ -212,16 +219,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
             sortTypeTitle = getString(R.string.favorite_movies);
         }
         setTitle(sortTypeTitle);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mMovieSortType == MovieSortType.FAVORITES) {
-            loadFavoriteMovieData();
-        }
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,8 +64,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
 
-        mMovie = (Movie) getIntent().getParcelableExtra("MOVIE");
-        mPosterWidth = getIntent().getIntExtra("POSTER_WIDTH", 0);
+        mMovie = (Movie) getIntent().getParcelableExtra(getString(R.string.EXTRA_MOVIE));
+        mPosterWidth = getIntent().getIntExtra(getString(R.string.EXTRA_POSTER_WIDTH), 0);
         Picasso.with(this).load(NetworkUtils.buildMoviePosterUrlString(mMovie.posterPath, mPosterWidth))
                 .into(mPosterImageView);
 
@@ -92,7 +91,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         boolean isFavorite = MovieDbHelper.query(this, mMovie.movieId);
         mMovie.isFavorite = isFavorite;
-        Log.v(TAG, "Movie is favorite " + isFavorite);
         invalidateOptionsMenu();
     }
 
@@ -145,8 +143,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         Context context = this;
         Class destinationClass = MovieReviewListActivity.class;
         Intent intent = new Intent(context, destinationClass);
-        intent.putExtra("MOVIE_REVIEWS", mMovieReviews);
-        intent.putExtra("MOVIE_TITLE", mMovie.title);
+        intent.putExtra(getString(R.string.EXTRA_MOVIE_REVIEWS), mMovieReviews);
+        intent.putExtra(getString(R.string.EXTRA_MOVIE_TITLE), mMovie.title);
         startActivity(intent);
     }
 
@@ -156,7 +154,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         mTrailersRecyclerView.setLayoutManager(layoutManager);
         mTrailersRecyclerView.setHasFixedSize(false);
 
-        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this, 200); //R.dimen.movie_trailer_thumbnail_size
+        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this);
 
         mTrailersRecyclerView.setAdapter(mMovieTrailerListAdapter);
     }
@@ -169,7 +167,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
 
         @Override
         public void onTaskComplete(MovieTrailer[] movieTrailers) {
-            //mLoadingIndicator.setVisibility(View.INVISIBLE);
             mMovieTrailers = movieTrailers;
             if (mMovieTrailers != null) {
                 mMovieTrailerListAdapter.setMovieTrailers(movieTrailers);

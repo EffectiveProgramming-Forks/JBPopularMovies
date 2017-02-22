@@ -120,7 +120,7 @@ public final class NetworkUtils {
         return urlString;
     }
 
-    public static String buildMovieTrailerPosterUrlString(String trailerKey, int itemWidth) {
+    public static String buildMovieTrailerPosterUrlString(String trailerKey) {
         Uri builtUri = Uri.parse(MOVIE_TRAILER_POSTER_BASE_URL).buildUpon()
                 .appendPath(trailerKey)
                 .appendPath(MOVIE_TRAILER_POSTER_URL_SUFFIX)
