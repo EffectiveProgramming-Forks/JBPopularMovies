@@ -154,9 +154,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         mTrailersRecyclerView.setLayoutManager(layoutManager);
-        mTrailersRecyclerView.setHasFixedSize(true);
+        mTrailersRecyclerView.setHasFixedSize(false);
 
-        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this, R.dimen.movie_trailer_thumbnail_size);
+        mMovieTrailerListAdapter = new MovieTrailerListAdapter(this, 200); //R.dimen.movie_trailer_thumbnail_size
 
         mTrailersRecyclerView.setAdapter(mMovieTrailerListAdapter);
     }
