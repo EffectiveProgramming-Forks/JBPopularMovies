@@ -142,8 +142,12 @@ public class MovieListActivity extends AppCompatActivity implements MovieListAda
     private void loadFavoriteMovieData() {
         showMoviesView();
         mLoadingIndicator.setVisibility(View.VISIBLE);
-        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
-        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
+        LoaderManager manager = getSupportLoaderManager();
+        if (manager.getLoader(MOVIE_LOADER_ID) == null) {
+            manager.initLoader(MOVIE_LOADER_ID, null, this);
+        } else {
+            manager.restartLoader(MOVIE_LOADER_ID, null, this);
+        }
     }
 
     @Override
